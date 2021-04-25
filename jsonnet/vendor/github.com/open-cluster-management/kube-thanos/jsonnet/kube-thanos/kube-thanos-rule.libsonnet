@@ -53,6 +53,8 @@ function(params) {
   // Safety checks for combined config of defaults and params
   assert std.isNumber(tr.config.replicas) && tr.config.replicas >= 0 : 'thanos rule replicas has to be number >= 0',
   assert std.isArray(tr.config.ruleFiles),
+  assert std.isObject(tr.config.alertmanagersConfigFile),
+  assert std.isArray(tr.config.alertmanagersCaBundle),
   assert std.isArray(tr.config.rulesConfig),
   assert std.isArray(tr.config.alertmanagersURLs),
   assert std.isObject(tr.config.resources),
@@ -118,6 +120,11 @@ function(params) {
         (['--rule-file=%s' % path for path in tr.config.ruleFiles]) +
         (['--alertmanagers.url=%s' % url for url in tr.config.alertmanagersURLs]) +
         (
+          if tr.config.alertmanagersConfigFile != {} then [
+            '--alertmanagers.config-file=/etc/thanos/config/' + tr.config.alertmanagersConfigFile.name + tr.config.alertmanagersConfigFile.key
+          ]
+          else []
+        ) + (
           if std.length(tr.config.rulesConfig) > 0 then [
             '--rule-file=/etc/thanos/rules/' + ruleConfig.name + '/' + ruleConfig.key
             for ruleConfig in tr.config.rulesConfig
@@ -150,6 +157,15 @@ function(params) {
           { name: ruleConfig.name, mountPath: '/etc/thanos/rules/' + ruleConfig.name }
           for ruleConfig in tr.config.rulesConfig
         ] else []
+      ) + (
+        if std.length(tr.config.alertmanagersCaBundle) > 0 then [
+          { name: alertmanagerCaBundle.name, mountPath: '/etc/thanos/alertmanagerCAs/' + alertmanagerCaBundle.name }
+          for alertmanagerCaBundle in tr.config.alertmanagersCaBundle
+        ] else []
+      ) + (
+        if tr.config.alertmanagersConfigFile != {} then [
+          { name: tr.config.alertmanagersConfigFile.name, mountPath: '/etc/thanos/config/' + tr.config.alertmanagersConfigFile.name }
+        ] else []
       ),
       livenessProbe: { failureThreshold: 24, periodSeconds: 5, httpGet: {
         scheme: 'HTTP',
@@ -173,11 +189,32 @@ function(params) {
         [
           '-webhook-url=http://localhost:' + tr.service.spec.ports[1].port + '/-/reload',
         ] +
-        (['-volume-dir=/etc/thanos/rules/' + ruleConfig.name for ruleConfig in tr.config.rulesConfig]),
+        (
+          if std.length(tr.config.rulesConfig) > 0 then [
+            '-volume-dir=/etc/thanos/rules/' + ruleConfig.name for ruleConfig in tr.config.rulesConfig
+          ] else []
+        ) + (
+          if std.length(tr.config.alertmanagersCaBundle) > 0 then [
+            '-volume-dir=/etc/thanos/alertmanagerCAs/' + alertmanagerCaBundle.name for alertmanagerCaBundle in tr.config.alertmanagersCaBundle
+          ] else []
+        ) + (
+          if tr.config.alertmanagersConfigFile != {} then [
+            '-volume-dir=/etc/thanos/config/' + tr.config.alertmanagersConfigFile.name
+          ] else []
+        ),
       volumeMounts: [
         { name: ruleConfig.name, mountPath: '/etc/thanos/rules/' + ruleConfig.name }
         for ruleConfig in tr.config.rulesConfig
-      ],
+      ] + (
+        if std.length(tr.config.alertmanagersCaBundle) > 0 then [
+          { name: alertmanagerCaBundle.name, mountPath: '/etc/thanos/alertmanagerCAs/' + alertmanagerCaBundle.name }
+          for alertmanagerCaBundle in tr.config.alertmanagersCaBundle
+        ] else []
+      ) + (
+        if tr.config.alertmanagersConfigFile != {} then [
+          { name: tr.config.alertmanagersConfigFile.name, mountPath: '/etc/thanos/config/' + tr.config.alertmanagersConfigFile.name }
+        ] else []
+      ),
     };
 
     {
@@ -200,11 +237,27 @@ function(params) {
             serviceAccountName: tr.serviceAccount.metadata.name,
             securityContext: tr.config.securityContext,
             containers: [c] +
-                        (if std.length(tr.config.rulesConfig) > 0 then [reloadContainer] else []),
-            volumes: [
-              { name: ruleConfig.name, configMap: { name: ruleConfig.name } }
-              for ruleConfig in tr.config.rulesConfig
-            ],
+                        (if std.length(tr.config.rulesConfig) > 0 || std.length(tr.config.alertmanagersCaBundle) > 0 || tr.config.alertmanagersConfigFile != {} then [
+                          reloadContainer
+                        ] else []),
+            volumes: [] +
+            (
+              if std.length(tr.config.rulesConfig) > 0 then [
+                { name: ruleConfig.name, configMap: { name: ruleConfig.name } }
+                for ruleConfig in tr.config.rulesConfig
+              ] else []
+            ) +
+            (
+              if std.length(tr.config.alertmanagersCaBundle) > 0 then [
+                { name: alertmanagerCaBundle.name, alertmanagerCaBundle.type: { name: alertmanagerCaBundle.name } }
+                for alertmanagerCaBundle in tr.config.alertmanagersCaBundle
+              ] else []
+            ) +
+            (
+              if tr.config.alertmanagersConfigFile != {} then [{
+                name: tr.config.alertmanagersConfigFile.name, configMap: { name: tr.config.alertmanagersConfigFile.name }
+              }] else []
+            ),
           },
         },
         volumeClaimTemplates: if std.length(tr.config.volumeClaimTemplate) > 0 then [tr.config.volumeClaimTemplate {

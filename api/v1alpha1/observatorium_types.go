@@ -316,6 +316,29 @@ type RuleConfig struct {
 	Key string `json:"key"`
 }
 
+type VolumeFromType string
+
+var (
+	VolumeFromTypeConfigMap = "configMap"
+	VolumeFromTypeSecret    = "secret"
+)
+
+type AlertmanagerCaBundle struct {
+	// Alertmanager CaBundle Mount type, configMap or secret
+	Type VolumeFromType `json:"type"`
+	// Alertmanager CaBundle Mount Name
+	Name string `json:"name"`
+	// Alertmanager CaBundle Mount key
+	Key string `json:"key"`
+}
+
+type AlertmanagersConfigFile struct {
+	// Alertmanager ConfigMap Name
+	Name string `json:"name"`
+	// Alertmanager ConfigMap key
+	Key string `json:"key"`
+}
+
 type RuleSpec struct {
 	// Number of Rule replicas.
 	Replicas *int32 `json:"replicas,omitempty"`
@@ -327,6 +350,12 @@ type RuleSpec struct {
 	// AlertmanagersURL
 	// +optional
 	AlertmanagersURL []string `json:"alertmanagersURL,omitempty"`
+	// AlertmanagersCaBundle
+	// +optional
+	AlertmanagersCaBundle []AlertmanagerCaBundle `json:"alertmanagersCaBundle,omitempty"`
+	// AlertmanagersConfigFile
+	// +optional
+	AlertmanagersConfigFile AlertmanagersConfigFile `json:"alertmanagersConfigFile,omitempty"`
 	// ReloaderImage is an image of configmap reloader
 	// +optional
 	ReloaderImage string `json:"reloaderImage,omitempty"`
