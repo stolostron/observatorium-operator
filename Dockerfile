@@ -12,7 +12,7 @@ RUN GO111MODULE="on" go build github.com/brancz/locutus
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 WORKDIR /
-COPY --from=builder /workspace/locutus /
+COPY --from=builder /workspace/operator/locutus /
 COPY --from=builder /workspace/operator/jsonnet /environments/operator
 COPY --from=builder /workspace/components/ /components/
 COPY --from=builder /workspace/operator/jsonnet/vendor/ /vendor/
