@@ -20,4 +20,3 @@ There is `make generate` that will generate new Kubernetes client files after up
 Then there is `make manifests` which is going to generate all manifest YAML files from jsonnet so that things are kept up-to-date.
 
 If you need to update the dependencies for jsonnet simply use `make jsonnet-update` or more specifically `make jsonnet-update-deployments`.
-
