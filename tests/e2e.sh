@@ -125,7 +125,7 @@ run_test() {
     $KUBECTL wait --for=condition=available --timeout=10m -n observatorium-minio deploy/minio || (must_gather "$ARTIFACT_DIR" && exit 1)
     $KUBECTL wait --for=condition=available --timeout=10m -n observatorium deploy/observatorium-xyz-thanos-query-frontend || (must_gather "$ARTIFACT_DIR" && exit 1)
     $KUBECTL wait --for=condition=available --timeout=10m -n observatorium deploy/observatorium-xyz-loki-query-frontend || (must_gather "$ARTIFACT_DIR" && exit 1)
-    $KUBECTL apply -n default -f jsonnet/vendor/github.com/observatorium/deployments/tests/manifests/observatorium-xyz-tls-configmap.yaml
+    $KUBECTL apply -n observatorium -f jsonnet/vendor/github.com/observatorium/deployments/tests/manifests/observatorium-xyz-tls-configmap.yaml
     $KUBECTL apply -n default -f jsonnet/vendor/github.com/observatorium/deployments/tests/manifests/observatorium-up-metrics"$suffix".yaml
 
     sleep 5
