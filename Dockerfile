@@ -1,7 +1,6 @@
 # Build the manager binary
-FROM registry.ci.openshift.org/open-cluster-management/builder:go1.17-linux AS builder as builder
+FROM registry.ci.openshift.org/open-cluster-management/builder:go1.17-linux AS builder
 
-RUN apk add --update --no-cache git bash
 WORKDIR /workspace
 # Copy the jsonnet source
 COPY . operator/
