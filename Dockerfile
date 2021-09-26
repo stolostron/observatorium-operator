@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM golang:1.13.3-alpine3.10 as builder
+FROM registry.ci.openshift.org/open-cluster-management/builder:go1.17-linux AS builder as builder
 
 RUN apk add --update --no-cache git bash
 WORKDIR /workspace
@@ -11,7 +11,7 @@ COPY ./jsonnet/vendor/github.com/observatorium/deployments/environments/base/def
 WORKDIR /workspace/operator
 RUN GO111MODULE="on" go build github.com/brancz/locutus
 
-FROM alpine:3.10 as runner
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest as runner
 WORKDIR /
 COPY --from=builder /workspace/operator/locutus /
 COPY --from=builder /workspace/operator/jsonnet /
