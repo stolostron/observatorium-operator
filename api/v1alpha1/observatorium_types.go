@@ -142,6 +142,9 @@ type ReceiversSpec struct {
 	// How long to retain raw samples on local storage
 	// +optional
 	Retention string `json:"retention,omitempty"`
+	// TenantHeader is the http header for tenant id.
+	// +optional
+	TenantHeader string `json:"tenantHeader,omitempty"`
 }
 
 type StoreSpec struct {
@@ -308,6 +311,12 @@ type APISpec struct {
 	// ServiceMonitor enables servicemonitor.
 	// +optional
 	ServiceMonitor bool `json:"serviceMonitor,omitempty"`
+	// WriteEndpoint is the write endpoint.
+	// +optional
+	WriteEndpoint string `json:"writeEndpoint,omitempty"`
+	// TenantHeader is the http header for tenant id.
+	// +optional
+	TenantHeader string `json:"tenantHeader,omitempty"`
 }
 
 type QuerySpec struct {

@@ -17,7 +17,7 @@
           "subdir": "jsonnet/kube-thanos"
         }
       },
-      "version": "release-2.3"
+      "version": "main"
     },
     {
       "source": {
@@ -28,6 +28,15 @@
       },
       "version": "main",
       "name": "upstream-kube-thanos"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/open-cluster-management/observatorium.git",
+          "subdir": "jsonnet/lib"
+        }
+      },
+      "version": "release-2.4"
     }
   ],
   "legacyImports": true

@@ -1,7 +1,7 @@
 local cr = import 'generic-operator/config';
 local thanos = (import 'github.com/observatorium/deployments/components/thanos.libsonnet');
 local loki = (import 'github.com/observatorium/deployments/components/loki.libsonnet');
-local api = (import 'github.com/observatorium/observatorium/jsonnet/lib/observatorium-api.libsonnet');
+local api = (import 'lib/observatorium-api.libsonnet');
 local obs = (import 'github.com/observatorium/deployments/components/observatorium.libsonnet');
 
 local operatorObs = obs {
@@ -114,7 +114,8 @@ local operatorObs = obs {
         operatorObs.thanos.queryFrontend.service.metadata.namespace,
         operatorObs.thanos.queryFrontend.service.spec.ports[0].port,
       ],
-      writeEndpoint: 'http://%s.%s.svc.cluster.local:%d' % [
+      writeEndpoint: if std.objectHas(cr.spec.api, 'writeEndpoint') then cr.spec.api.writeEndpoint
+      else 'http://%s.%s.svc.cluster.local:%d' % [
         operatorObs.thanos.receiversService.metadata.name,
         operatorObs.thanos.receiversService.metadata.namespace,
         operatorObs.thanos.receiversService.spec.ports[2].port,

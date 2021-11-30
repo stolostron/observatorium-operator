@@ -51,8 +51,18 @@
           "subdir": "jsonnet/kube-thanos"
         }
       },
-      "version": "ae9971c285449364854d0ad4aab8b8258e4b7638",
-      "sum": "Ih4YDcFrAuARANPUzFBtxpTZb8on1dOeE9SseXWaLLU="
+      "version": "e417a2ba8e05591cb8c7366d162e8cb14379370d",
+      "sum": "SnOH8Y2G8H6NMR0qDflFRVwbGTymI/rG/qi9supFWFQ="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/open-cluster-management/observatorium.git",
+          "subdir": "jsonnet/lib"
+        }
+      },
+      "version": "41d5637131af1045fcf8bc0b397ef3830723d98b",
+      "sum": "Qfu+T6CqHpBYAccKRwcx0VOE87V7uIqCyEIN+cbfBAg="
     },
     {
       "source": {
