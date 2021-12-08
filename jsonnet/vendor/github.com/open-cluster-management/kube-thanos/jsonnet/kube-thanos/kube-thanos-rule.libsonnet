@@ -14,6 +14,7 @@ local defaults = {
   rulesConfig: [],
   retention: '48h',
   blockDuration: '2h',
+  evalInterval: '30s',
   alertmanagersURLs: [],
   alertmanagerConfigFile: {},
   extraVolumeMounts: [],
@@ -117,6 +118,7 @@ function(params) {
           '--alert.label-drop=rule_replica',
           '--tsdb.retention=' + tr.config.retention,
           '--tsdb.block-duration=' + tr.config.blockDuration,
+          '--eval-interval=' + tr.config.evalInterval,
         ] +
         (['--query=%s' % querier for querier in tr.config.queriers]) +
         (['--rule-file=%s' % path for path in tr.config.ruleFiles]) +

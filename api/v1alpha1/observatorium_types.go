@@ -391,6 +391,9 @@ type RuleSpec struct {
 	// Block retention time on local disk
 	// +optional
 	Retention string `json:"retention,omitempty"`
+	// Evaluation interval
+	// +optional
+	EvalInterval string `json:"evalInterval,omitempty"`
 }
 
 type CompactSpec struct {
