@@ -13,7 +13,7 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/open-cluster-management/kube-thanos.git",
+          "remote": "https://github.com/stolostron/kube-thanos.git",
           "subdir": "jsonnet/kube-thanos"
         }
       },
@@ -32,11 +32,11 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/open-cluster-management/observatorium.git",
+          "remote": "https://github.com/stolostron/observatorium.git",
           "subdir": "jsonnet/lib"
         }
       },
-      "version": "release-2.4"
+      "version": "release-2.5"
     }
   ],
   "legacyImports": true
