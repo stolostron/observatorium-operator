@@ -4,23 +4,23 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/observatorium/deployments.git",
-          "subdir": ""
+          "remote": "https://github.com/observatorium/api.git",
+          "subdir": "jsonnet/lib"
         }
       },
-      "version": "0ef3e7b9dcb6c36568f80a83828f3d9f8620203d",
-      "sum": "AQu+L8TxdfPEVIckG+ZZu/hXCmP7sTt3LE2fQjvXido="
+      "version": "f8b0fbf3eaaeb6e0e51f66b342074d5c782b0b69",
+      "sum": "/33386b3/boEQGuUF3y8mc7iOzFekzLuPtozDzTKfhs=",
+      "name": "observatorium-api"
     },
     {
       "source": {
         "git": {
           "remote": "https://github.com/observatorium/observatorium.git",
-          "subdir": "jsonnet/lib"
+          "subdir": "configuration"
         }
       },
-      "version": "d40a037f57ad6ff3b2fa4c62b3433340bba61a46",
-      "sum": "Z86CgnoTybhpdQKWc2ptURmps1d9Qxhec0/IK6v71kY=",
-      "name": "observatorium"
+      "version": "ddd91bbfa980f9588af7ad24fa6e33ae24cda852",
+      "sum": "3JuzPRAtOLmV15ADRx9ylrUD+XlCeJzZjg0LrPIAF3c="
     },
     {
       "source": {

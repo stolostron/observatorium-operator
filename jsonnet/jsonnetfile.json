@@ -4,11 +4,12 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/observatorium/deployments.git",
-          "subdir": ""
+          "remote": "https://github.com/observatorium/observatorium.git",
+          "subdir": "configuration"
         }
       },
-      "version": "master"
+      "version": "ddd91bbfa980f9588af7ad24fa6e33ae24cda852",
+      "sum": "3JuzPRAtOLmV15ADRx9ylrUD+XlCeJzZjg0LrPIAF3c="
     },
     {
       "source": {

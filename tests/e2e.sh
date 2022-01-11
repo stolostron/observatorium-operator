@@ -35,13 +35,13 @@ kind() {
 
 dex() {
     $KUBECTL create ns dex || true
-    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/deployments/tests/manifests/observatorium-xyz-tls-dex.yaml
-    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/deployments/environments/dev/manifests/dex-secret.yaml
-    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/deployments/environments/dev/manifests/dex-pvc.yaml
-    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/deployments/environments/dev/manifests/dex-deployment.yaml
-    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/deployments/environments/dev/manifests/dex-service.yaml
+    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/tests/manifests/observatorium-xyz-tls-dex.yaml
+    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/examples/dev/manifests/dex-secret.yaml
+    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/examples/dev/manifests/dex-pvc.yaml
+    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/examples/dev/manifests/dex-deployment.yaml
+    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/examples/dev/manifests/dex-service.yaml
     # service CA for the first tenant, "test"
-    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/deployments/tests/manifests/test-ca-tls.yaml
+    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/tests/manifests/test-ca-tls.yaml
 
     # Observatorium needs the Dex API to be ready for authentication to work and thus for the tests to pass.
     $KUBECTL wait --for=condition=available --timeout=10m -n dex deploy/dex || (must_gather "$ARTIFACT_DIR" && exit 1)
@@ -53,7 +53,7 @@ deploy() {
     $KUBECTL create ns observatorium-minio || true
     $KUBECTL create ns observatorium || true
     dex
-    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/deployments/environments/dev/manifests
+    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/examples/dev/manifests
 }
 
 wait_for_cr() {
@@ -88,13 +88,13 @@ deploy_operator() {
     $KUBECTL create ns observatorium-minio || true
     $KUBECTL create ns observatorium || true
     dex
-    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/deployments/environments/dev/manifests/minio-secret-thanos.yaml
-    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/deployments/environments/dev/manifests/minio-secret-loki.yaml
-    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/deployments/environments/dev/manifests/minio-pvc.yaml
-    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/deployments/environments/dev/manifests/minio-deployment.yaml
-    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/deployments/environments/dev/manifests/minio-service.yaml
-    $KUBECTL apply -n observatorium -f jsonnet/vendor/github.com/observatorium/deployments/tests/manifests/observatorium-xyz-tls-configmap.yaml
-    $KUBECTL apply -n observatorium -f jsonnet/vendor/github.com/observatorium/deployments/tests/manifests/observatorium-xyz-tls-secret.yaml
+    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/examples/dev/manifests/minio-secret-thanos.yaml
+    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/examples/dev/manifests/minio-secret-loki.yaml
+    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/examples/dev/manifests/minio-pvc.yaml
+    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/examples/dev/manifests/minio-deployment.yaml
+    $KUBECTL apply -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/examples/dev/manifests/minio-service.yaml
+    $KUBECTL apply -n observatorium -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/tests/manifests/observatorium-xyz-tls-configmap.yaml
+    $KUBECTL apply -n observatorium -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/tests/manifests/observatorium-xyz-tls-secret.yaml
     $KUBECTL apply -f manifests/crds
     $SED_CMD -i "s,quay.io/observatorium/observatorium-operator:latest,$OPERATOR_IMAGE_NAME," manifests/operator.yaml
     cat manifests/operator.yaml
@@ -141,14 +141,14 @@ run_test() {
     $KUBECTL wait --for=condition=available --timeout=10m -n observatorium-minio deploy/minio || (must_gather "$ARTIFACT_DIR" && exit 1)
     $KUBECTL wait --for=condition=available --timeout=10m -n observatorium deploy/observatorium-xyz-thanos-query-frontend || (must_gather "$ARTIFACT_DIR" && exit 1)
     $KUBECTL wait --for=condition=available --timeout=10m -n observatorium deploy/observatorium-xyz-loki-query-frontend || (must_gather "$ARTIFACT_DIR" && exit 1)
-    $KUBECTL apply -n default -f jsonnet/vendor/github.com/observatorium/deployments/tests/manifests/observatorium-xyz-tls-configmap.yaml
-    $KUBECTL apply -n default -f jsonnet/vendor/github.com/observatorium/deployments/tests/manifests/observatorium-up-metrics"$suffix".yaml
+    $KUBECTL apply -n default -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/tests/manifests/observatorium-xyz-tls-configmap.yaml
+    $KUBECTL apply -n default -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/tests/manifests/observatorium-up-metrics"$suffix".yaml
 
     sleep 5
 
     # This should wait for ~2min for the job to finish.
     $KUBECTL wait --for=condition=complete --timeout=5m -n default job/observatorium-up-metrics"$suffix" || (must_gather "$ARTIFACT_DIR" && exit 1)
-    $KUBECTL apply -n default -f jsonnet/vendor/github.com/observatorium/deployments/tests/manifests/observatorium-up-logs"$suffix".yaml
+    $KUBECTL apply -n default -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/tests/manifests/observatorium-up-logs"$suffix".yaml
 
     sleep 5
 
