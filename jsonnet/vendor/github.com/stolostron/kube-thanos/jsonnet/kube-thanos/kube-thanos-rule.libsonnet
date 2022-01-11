@@ -7,6 +7,7 @@ local defaults = {
   namespace: error 'must provide namespace',
   version: error 'must provide version',
   image: error 'must provide image',
+  imagePullPolicy: 'IfNotPresent',
   replicas: error 'must provide replicas',
   reloaderImage: error 'must provide reloader image',
   objectStorageConfig: error 'must provide objectStorageConfig',
@@ -105,6 +106,7 @@ function(params) {
     local c = {
       name: 'thanos-rule',
       image: tr.config.image,
+      imagePullPolicy: tr.config.imagePullPolicy,
       args:
         [
           'rule',
@@ -189,6 +191,7 @@ function(params) {
     local reloadContainer = {
       name: 'configmap-reloader',
       image: tr.config.reloaderImage,
+      imagePullPolicy: tr.config.imagePullPolicy,
       args:
         [
           '-webhook-url=http://localhost:' + tr.service.spec.ports[1].port + '/-/reload',

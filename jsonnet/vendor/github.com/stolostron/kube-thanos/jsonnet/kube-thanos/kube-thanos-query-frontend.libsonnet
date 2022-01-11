@@ -7,6 +7,7 @@ local defaults = {
   namespace: error 'must provide namespace',
   version: error 'must provide version',
   image: error 'must provide image',
+  imagePullPolicy: 'IfNotPresent',
   replicas: error 'must provide replicas',
   downstreamURL: error 'must provide downstreamURL',
   splitInterval: '24h',
@@ -138,6 +139,7 @@ function(params) {
     local c = {
       name: 'thanos-query-frontend',
       image: tqf.config.image,
+      imagePullPolicy: tqf.config.imagePullPolicy,
       args: [
         'query-frontend',
         '--log.level=' + tqf.config.logLevel,

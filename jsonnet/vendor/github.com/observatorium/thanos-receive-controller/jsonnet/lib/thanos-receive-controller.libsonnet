@@ -7,11 +7,13 @@ local defaults = {
   namespace: error 'must provide namespace',
   version: error 'must provide version',
   image: error 'must provide image',
+  imagePullPolicy: 'IfNotPresent',
   replicas: error 'must provide replicas',
   hashrings: error 'must provide hashring configuration',
   resources: {},
   serviceMonitor: false,
   ports: { http: 8080 },
+  clusterDomain: '',
 
   commonLabels:: {
     'app.kubernetes.io/name': 'thanos-receive-controller',
@@ -137,12 +139,18 @@ function(params) {
     local c = {
       name: 'thanos-receive-controller',
       image: trc.config.image,
+      imagePullPolicy: trc.config.imagePullPolicy,
       args: [
         '--configmap-name=%s' % trc.configmap.metadata.name,
         '--configmap-generated-name=%s-generated' % trc.configmap.metadata.name,
         '--file-name=hashrings.json',
         '--namespace=$(NAMESPACE)',
-      ],
+      ] +
+      (
+        if std.length(trc.config.clusterDomain) > 0 then [
+          '--cluster-domain=%s' % trc.config.clusterDomain,
+        ] else []
+      ),
       env: [
         { name: 'NAMESPACE', valueFrom: { fieldRef: { fieldPath: 'metadata.namespace' } } },
       ],

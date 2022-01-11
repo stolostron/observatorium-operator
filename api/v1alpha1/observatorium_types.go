@@ -60,6 +60,8 @@ type ObservatoriumSpec struct {
 type ThanosSpec struct {
 	// Thanos image
 	Image string `json:"image,omitempty"`
+	// Thanos image pull policy
+	ImagePullPolicy v1.PullPolicy `json:"imagePullPolicy,omitempty"`
 	// Version of Thanos image to be deployed.
 	Version string `json:"version,omitempty"`
 	// Thanos CompactSpec
@@ -116,6 +118,8 @@ type LokiObjectStorageConfigSpec struct {
 type ReceiveControllerSpec struct {
 	// Receive Controller image
 	Image string `json:"image,omitempty"`
+	// Receive image pull policy
+	ImagePullPolicy v1.PullPolicy `json:"imagePullPolicy,omitempty"`
 	// Version describes the version of Thanos receive controller to use.
 	Version string `json:"version,omitempty"`
 	// Compute Resources required by this container.
@@ -165,10 +169,14 @@ type StoreSpec struct {
 type MemCacheSpec struct {
 	// Memcached image
 	Image string `json:"image,omitempty"`
+	// Memcached image pull policy
+	ImagePullPolicy v1.PullPolicy `json:"imagePullPolicy,omitempty"`
 	// Version of Memcached image to be deployed.
 	Version string `json:"version,omitempty"`
 	// Memcached Prometheus Exporter image
 	ExporterImage string `json:"exporterImage,omitempty"`
+	// Memcached Prometheus Exporter image image pull policy
+	ExporterImagePullPolicy v1.PullPolicy `json:"exporterImagePullPolicy,omitempty"`
 	// Version of Memcached Prometheus Exporter image to be deployed.
 	ExporterVersion string `json:"exporterVersion,omitempty"`
 	// Number of Memcached replicas.
@@ -295,6 +303,8 @@ type TLS struct {
 type APISpec struct {
 	// API image
 	Image string `json:"image,omitempty"`
+	// API image pull policy
+	ImagePullPolicy v1.PullPolicy `json:"imagePullPolicy,omitempty"`
 	// Number of API replicas.
 	Replicas *int32 `json:"replicas,omitempty"`
 	// Version describes the version of API to use.
@@ -385,6 +395,9 @@ type RuleSpec struct {
 	// ReloaderImage is an image of configmap reloader
 	// +optional
 	ReloaderImage string `json:"reloaderImage,omitempty"`
+	// ReloaderImage image pull policy
+	// +optional
+	ReloaderImagePullPolicy v1.PullPolicy `json:"reloaderImagePullPolicy,omitempty"`
 	// Compute Resources required by this container.
 	// +optional
 	Resources v1.ResourceRequirements `json:"resources,omitempty"`
@@ -456,6 +469,8 @@ type Hashring struct {
 type LokiSpec struct {
 	// Loki image
 	Image string `json:"image"`
+	// Loki image pull policy
+	ImagePullPolicy v1.PullPolicy `json:"imagePullPolicy,omitempty"`
 	// Loki replicas per component
 	Replicas map[string]int32 `json:"replicas,omitempty"`
 	// Version of Loki image to be deployed
