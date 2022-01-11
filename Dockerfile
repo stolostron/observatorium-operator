@@ -8,7 +8,7 @@ COPY ./jsonnet/vendor/github.com/observatorium/deployments/components/ component
 
 # Build
 WORKDIR /workspace/operator
-RUN GO111MODULE="on" go build github.com/brancz/locutus
+RUN GO111MODULE="on" CGO_ENABLED=0 go build github.com/brancz/locutus
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
