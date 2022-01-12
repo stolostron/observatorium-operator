@@ -52,7 +52,7 @@ function(params) {
                   value: 'minio123',
                 },
               ],
-              image: 'quay.io/minio/minio:RELEASE.2021-08-25T00-41-18Z',
+              image: 'minio/minio',
               name: 'minio',
               ports: [
                 { containerPort: 9000 },

@@ -29,6 +29,7 @@
     'receive="true"',
   ],
   tenantLabelName: null,
+  tenantHeader: null,
 
   commonLabels:: {
     'app.kubernetes.io/name': 'thanos-receive',
