@@ -1,4 +1,4 @@
-module github.com/open-cluster-management/observatorium-operator
+module github.com/stolostron/observatorium-operator
 
 go 1.14
 

@@ -1,4 +1,4 @@
-local t = (import 'github.com/open-cluster-management/kube-thanos/jsonnet/kube-thanos/thanos.libsonnet');
+local t = (import 'github.com/stolostron/kube-thanos/jsonnet/kube-thanos/thanos.libsonnet');
 local loki = import 'github.com/observatorium/deployments/components/loki.libsonnet';
 local config = import './operator-config.libsonnet';
 local trc = import 'thanos-receive-controller/thanos-receive-controller.libsonnet';
