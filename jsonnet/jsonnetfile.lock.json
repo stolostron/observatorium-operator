@@ -47,7 +47,7 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/open-cluster-management/kube-thanos.git",
+          "remote": "https://github.com/stolostron/kube-thanos.git",
           "subdir": "jsonnet/kube-thanos"
         }
       },
