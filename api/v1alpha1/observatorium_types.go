@@ -93,6 +93,12 @@ type ThanosObjectStorageConfigSpec struct {
 	Name string `json:"name"`
 	// Object Store Config key
 	Key string `json:"key"`
+	// TLS secret contains the custom certificate for the object store
+	// +optional
+	TLSSecretName string `json:"tlsSecretName"`
+	// TLS secret mount path in thanos store/ruler/compact/receiver
+	// +optional
+	TLSSecretMountPath string `json:"tlsSecretMountPath"`
 }
 
 type LokiObjectStorageConfigSpec struct {
