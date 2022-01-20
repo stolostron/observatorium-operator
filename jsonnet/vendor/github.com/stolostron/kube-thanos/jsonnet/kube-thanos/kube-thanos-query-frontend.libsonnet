@@ -30,6 +30,7 @@ local defaults = {
     http: 9090,
   },
   tracing: {},
+  extraEnv: [],
 
   memcachedDefaults+:: {
     config+: {
@@ -171,6 +172,19 @@ function(params) {
           ),
         ] else []
       ),
+      env: [
+        {
+          // Inject the host IP to make configuring tracing convenient.
+          name: 'HOST_IP_ADDRESS',
+          valueFrom: {
+            fieldRef: {
+              fieldPath: 'status.hostIP',
+            },
+          },
+        },
+      ] + (
+        if std.length(tqf.config.extraEnv) > 0 then tqf.config.extraEnv else []
+      ),
       ports: [
         { name: name, containerPort: tqf.config.ports[name] }
         for name in std.objectFields(tqf.config.ports)
@@ -207,6 +221,9 @@ function(params) {
             serviceAccountName: tqf.serviceAccount.metadata.name,
             securityContext: tqf.config.securityContext,
             terminationGracePeriodSeconds: 120,
+            nodeSelector: {
+              'kubernetes.io/os': 'linux',
+            },
             affinity: { podAntiAffinity: {
               preferredDuringSchedulingIgnoredDuringExecution: [{
                 podAffinityTerm: {

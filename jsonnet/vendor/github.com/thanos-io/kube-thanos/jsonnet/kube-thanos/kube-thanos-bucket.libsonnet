@@ -7,6 +7,7 @@ local defaults = {
   namespace: error 'must provide namespace',
   version: error 'must provide version',
   image: error 'must provide image',
+  imagePullPolicy: 'IfNotPresent',
   objectStorageConfig: error 'must provide objectStorageConfig',
   resources: {},
   logLevel: 'info',
@@ -15,6 +16,7 @@ local defaults = {
     http: 10902,
   },
   tracing: {},
+  extraEnv: [],
 
   commonLabels:: {
     'app.kubernetes.io/name': 'thanos-bucket',
@@ -82,6 +84,7 @@ function(params) {
     local container = {
       name: 'thanos-bucket',
       image: tb.config.image,
+      imagePullPolicy: tb.config.imagePullPolicy,
       args: [
         'tools',
         'bucket',
@@ -118,7 +121,9 @@ function(params) {
             },
           },
         },
-      ],
+      ] + (
+        if std.length(tb.config.extraEnv) > 0 then tb.config.extraEnv else []
+      ),
       ports: [
         { name: name, containerPort: tb.config.ports[name] }
         for name in std.objectFields(tb.config.ports)
@@ -135,6 +140,9 @@ function(params) {
       } },
       resources: if tb.config.resources != {} then tb.config.resources else {},
       terminationMessagePolicy: 'FallbackToLogsOnError',
+      volumeMounts: if std.objectHas(tb.config.objectStorageConfig, 'tlsSecretName') && std.length(tb.config.objectStorageConfig.tlsSecretName) > 0 then [
+        { name: 'tls-secret', mountPath: tb.config.objectStorageConfig.tlsSecretMountPath },
+      ] else [],
     };
 
     {
@@ -154,7 +162,14 @@ function(params) {
             serviceAccountName: tb.serviceAccount.metadata.name,
             securityContext: tb.config.securityContext,
             containers: [container],
+            volumes: if std.objectHas(tb.config.objectStorageConfig, 'tlsSecretName') && std.length(tb.config.objectStorageConfig.tlsSecretName) > 0 then [{
+              name: 'tls-secret',
+              secret: { secretName: tb.config.objectStorageConfig.tlsSecretName },
+            }] else [],
             terminationGracePeriodSeconds: 120,
+            nodeSelector: {
+              'kubernetes.io/os': 'linux',
+            },
           },
         },
       },

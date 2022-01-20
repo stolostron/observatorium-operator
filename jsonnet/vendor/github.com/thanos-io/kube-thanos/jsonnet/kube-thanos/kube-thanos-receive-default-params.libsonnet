@@ -7,11 +7,13 @@
   namespace: error 'must provide namespace',
   version: error 'must provide version',
   image: error 'must provide image',
+  imagePullPolicy: 'IfNotPresent',
   replicas: error 'must provide replicas',
   replicationFactor: error 'must provide replication factor',
   objectStorageConfig: error 'must provide objectStorageConfig',
   podDisruptionBudgetMaxUnavailable: (std.floor(defaults.replicationFactor / 2)),
   hashringConfigMapName: '',
+  enableLocalEndpoint: true,
   volumeClaimTemplate: {},
   retention: '15d',
   logLevel: 'info',
@@ -29,6 +31,9 @@
     'receive="true"',
   ],
   tenantLabelName: null,
+  tenantHeader: null,
+  clusterDomain: 'cluster.local',
+  extraEnv: [],
 
   commonLabels:: {
     'app.kubernetes.io/name': 'thanos-receive',

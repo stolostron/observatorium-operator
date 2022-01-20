@@ -12,6 +12,7 @@ local defaults = {
   replicaLabels: error 'must provide replicaLabels',
   stores: ['dnssrv+_grpc._tcp.thanos-store.%s.svc.cluster.local' % defaults.namespace],
   externalPrefix: '',
+  prefixHeader: '',
   autoDownsampling: true,
   resources: {},
   queryTimeout: '',
@@ -24,6 +25,7 @@ local defaults = {
   logLevel: 'info',
   logFormat: 'logfmt',
   tracing: {},
+  extraEnv: [],
 
   commonLabels:: {
     'app.kubernetes.io/name': 'thanos-query',
@@ -117,6 +119,11 @@ function(params) {
           ] else []
         ) +
         (
+          if tq.config.prefixHeader != '' then [
+            '--web.prefix-header=' + tq.config.prefixHeader,
+          ] else []
+        ) +
+        (
           if tq.config.queryTimeout != '' then [
             '--query.timeout=' + tq.config.queryTimeout,
           ] else []
@@ -136,6 +143,19 @@ function(params) {
             '--query.auto-downsampling',
           ] else []
         ),
+      env: [
+        {
+          // Inject the host IP to make configuring tracing convenient.
+          name: 'HOST_IP_ADDRESS',
+          valueFrom: {
+            fieldRef: {
+              fieldPath: 'status.hostIP',
+            },
+          },
+        },
+      ] + (
+        if std.length(tq.config.extraEnv) > 0 then tq.config.extraEnv else []
+      ),
       ports: [
         { name: port.name, containerPort: port.port }
         for port in tq.service.spec.ports
@@ -174,6 +194,9 @@ function(params) {
             securityContext: tq.config.securityContext,
             serviceAccountName: tq.serviceAccount.metadata.name,
             terminationGracePeriodSeconds: 120,
+            nodeSelector: {
+              'kubernetes.io/os': 'linux',
+            },
             affinity: { podAntiAffinity: {
               preferredDuringSchedulingIgnoredDuringExecution: [{
                 podAffinityTerm: {

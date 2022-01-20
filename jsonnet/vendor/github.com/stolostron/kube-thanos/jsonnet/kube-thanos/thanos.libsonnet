@@ -1,8 +1,12 @@
 {
   bucket: (import 'kube-thanos-bucket.libsonnet'),
+  bucketReplicate: (import 'kube-thanos-bucket-replicate.libsonnet'),
   compact: (import 'kube-thanos-compact.libsonnet'),
+  compactShards: (import 'kube-thanos-compact-shards.libsonnet'),
   query: (import 'kube-thanos-query.libsonnet'),
   receive: (import 'kube-thanos-receive.libsonnet'),
+  receiveIngestor: (import 'kube-thanos-receive-ingestor.libsonnet'),
+  receiveRouter: (import 'kube-thanos-receive-router.libsonnet'),
   receiveHashrings: (import 'kube-thanos-receive-hashrings.libsonnet'),
   rule: (import 'kube-thanos-rule.libsonnet'),
   sidecar: (import 'kube-thanos-sidecar.libsonnet'),

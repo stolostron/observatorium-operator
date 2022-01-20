@@ -7,6 +7,7 @@ local defaults = {
   namespace: error 'must provide namespace',
   version: error 'must provide version',
   image: error 'must provide image',
+  imagePullPolicy: 'IfNotPresent',
   replicas: error 'must provide replicas',
   downstreamURL: error 'must provide downstreamURL',
   splitInterval: '24h',
@@ -29,6 +30,7 @@ local defaults = {
     http: 9090,
   },
   tracing: {},
+  extraEnv: [],
 
   memcachedDefaults+:: {
     config+: {
@@ -138,6 +140,7 @@ function(params) {
     local c = {
       name: 'thanos-query-frontend',
       image: tqf.config.image,
+      imagePullPolicy: tqf.config.imagePullPolicy,
       args: [
         'query-frontend',
         '--log.level=' + tqf.config.logLevel,
@@ -179,7 +182,9 @@ function(params) {
             },
           },
         },
-      ],
+      ] + (
+        if std.length(tqf.config.extraEnv) > 0 then tqf.config.extraEnv else []
+      ),
       ports: [
         { name: name, containerPort: tqf.config.ports[name] }
         for name in std.objectFields(tqf.config.ports)
@@ -216,6 +221,9 @@ function(params) {
             serviceAccountName: tqf.serviceAccount.metadata.name,
             securityContext: tqf.config.securityContext,
             terminationGracePeriodSeconds: 120,
+            nodeSelector: {
+              'kubernetes.io/os': 'linux',
+            },
             affinity: { podAntiAffinity: {
               preferredDuringSchedulingIgnoredDuringExecution: [{
                 podAffinityTerm: {

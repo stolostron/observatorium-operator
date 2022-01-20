@@ -49,14 +49,16 @@ function(params) {
   },
 
   statefulSet:
-    local localEndpointFlag = '--receive.local-endpoint=$(NAME).%s.$(NAMESPACE).svc.cluster.local:%d' % [
+    local localEndpointFlag = '--receive.local-endpoint=$(NAME).%s.$(NAMESPACE).svc.%s:%d' % [
       tr.config.name,
+      tr.config.clusterDomain,
       tr.config.ports.grpc,
     ];
 
     local c = {
       name: 'thanos-receive',
       image: tr.config.image,
+      imagePullPolicy: tr.config.imagePullPolicy,
       args: [
         'receive',
         '--log.level=' + tr.config.logLevel,
@@ -65,16 +67,26 @@ function(params) {
         '--http-address=0.0.0.0:%d' % tr.config.ports.http,
         '--remote-write.address=0.0.0.0:%d' % tr.config.ports['remote-write'],
         '--receive.replication-factor=%d' % tr.config.replicationFactor,
-        '--objstore.config=$(OBJSTORE_CONFIG)',
         '--tsdb.path=/var/thanos/receive',
         '--tsdb.retention=' + tr.config.retention,
-        localEndpointFlag,
       ] + [
         '--label=%s' % label
         for label in tr.config.labels
       ] + (
+        if tr.config.objectStorageConfig != null then [
+          '--objstore.config=$(OBJSTORE_CONFIG)',
+        ] else []
+      ) + (
+        if tr.config.enableLocalEndpoint then [
+          localEndpointFlag,
+        ] else []
+      ) + (
         if tr.config.tenantLabelName != null then [
           '--receive.tenant-label-name=%s' % tr.config.tenantLabelName,
+        ] else []
+      ) + (
+        if tr.config.tenantHeader != null then [
+          '--receive.tenant-header=%s' % tr.config.tenantHeader,
         ] else []
       ) + (
         if tr.config.hashringConfigMapName != '' then [
@@ -90,10 +102,6 @@ function(params) {
       env: [
         { name: 'NAME', valueFrom: { fieldRef: { fieldPath: 'metadata.name' } } },
         { name: 'NAMESPACE', valueFrom: { fieldRef: { fieldPath: 'metadata.namespace' } } },
-        { name: 'OBJSTORE_CONFIG', valueFrom: { secretKeyRef: {
-          key: tr.config.objectStorageConfig.key,
-          name: tr.config.objectStorageConfig.name,
-        } } },
         {
           // Inject the host IP to make configuring tracing convenient.
           name: 'HOST_IP_ADDRESS',
@@ -103,7 +111,17 @@ function(params) {
             },
           },
         },
-      ],
+      ] + (
+        if tr.config.objectStorageConfig != null then [{
+          name: 'OBJSTORE_CONFIG',
+          valueFrom: { secretKeyRef: {
+            key: tr.config.objectStorageConfig.key,
+            name: tr.config.objectStorageConfig.name,
+          } },
+        }] else []
+      ) + (
+        if std.length(tr.config.extraEnv) > 0 then tr.config.extraEnv else []
+      ),
       ports: [
         { name: name, containerPort: tr.config.ports[name] }
         for name in std.objectFields(tr.config.ports)
@@ -115,6 +133,10 @@ function(params) {
       }] + (
         if tr.config.hashringConfigMapName != '' then [
           { name: 'hashring-config', mountPath: '/var/lib/thanos-receive' },
+        ] else []
+      ) + (
+        if tr.config.objectStorageConfig != null && std.objectHas(tr.config.objectStorageConfig, 'tlsSecretName') && std.length(tr.config.objectStorageConfig.tlsSecretName) > 0 then [
+          { name: 'tls-secret', mountPath: tr.config.objectStorageConfig.tlsSecretMountPath },
         ] else []
       ),
       livenessProbe: { failureThreshold: 8, periodSeconds: 30, httpGet: {
@@ -151,11 +173,21 @@ function(params) {
             serviceAccountName: tr.serviceAccount.metadata.name,
             securityContext: tr.config.securityContext,
             containers: [c],
-            volumes: if tr.config.hashringConfigMapName != '' then [{
-              name: 'hashring-config',
-              configMap: { name: tr.config.hashringConfigMapName },
-            }] else [],
+            volumes: (
+              if tr.config.hashringConfigMapName != '' then [{
+                name: 'hashring-config',
+                configMap: { name: tr.config.hashringConfigMapName },
+              }] else []
+            ) + (
+              if tr.config.objectStorageConfig != null && std.objectHas(tr.config.objectStorageConfig, 'tlsSecretName') && std.length(tr.config.objectStorageConfig.tlsSecretName) > 0 then [{
+                name: 'tls-secret',
+                secret: { secretName: tr.config.objectStorageConfig.tlsSecretName },
+              }] else []
+            ),
             terminationGracePeriodSeconds: 900,
+            nodeSelector: {
+              'kubernetes.io/os': 'linux',
+            },
             affinity: { podAntiAffinity: {
               local labelSelector = { matchExpressions: [{
                 key: 'app.kubernetes.io/name',

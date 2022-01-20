@@ -7,6 +7,7 @@
   namespace: error 'must provide namespace',
   version: error 'must provide version',
   image: error 'must provide image',
+  imagePullPolicy: 'IfNotPresent',
   replicas: error 'must provide replicas',
   objectStorageConfig: error 'must provide objectStorageConfig',
   ignoreDeletionMarksDelay: '24h',
@@ -24,6 +25,7 @@
   tracing: {},
   minTime: '',
   maxTime: '',
+  extraEnv: [],
 
   memcachedDefaults+:: {
     config+: {

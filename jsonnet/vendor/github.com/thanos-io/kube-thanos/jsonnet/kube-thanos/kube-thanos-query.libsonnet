@@ -7,10 +7,12 @@ local defaults = {
   namespace: error 'must provide namespace',
   version: error 'must provide version',
   image: error 'must provide image',
+  imagePullPolicy: 'IfNotPresent',
   replicas: error 'must provide replicas',
   replicaLabels: error 'must provide replicaLabels',
   stores: ['dnssrv+_grpc._tcp.thanos-store.%s.svc.cluster.local' % defaults.namespace],
   externalPrefix: '',
+  prefixHeader: '',
   autoDownsampling: true,
   resources: {},
   queryTimeout: '',
@@ -23,6 +25,7 @@ local defaults = {
   logLevel: 'info',
   logFormat: 'logfmt',
   tracing: {},
+  extraEnv: [],
 
   commonLabels:: {
     'app.kubernetes.io/name': 'thanos-query',
@@ -95,6 +98,7 @@ function(params) {
     local c = {
       name: 'thanos-query',
       image: tq.config.image,
+      imagePullPolicy: tq.config.imagePullPolicy,
       args:
         [
           'query',
@@ -112,6 +116,11 @@ function(params) {
         (
           if tq.config.externalPrefix != '' then [
             '--web.external-prefix=' + tq.config.externalPrefix,
+          ] else []
+        ) +
+        (
+          if tq.config.prefixHeader != '' then [
+            '--web.prefix-header=' + tq.config.prefixHeader,
           ] else []
         ) +
         (
@@ -144,7 +153,9 @@ function(params) {
             },
           },
         },
-      ],
+      ] + (
+        if std.length(tq.config.extraEnv) > 0 then tq.config.extraEnv else []
+      ),
       ports: [
         { name: port.name, containerPort: port.port }
         for port in tq.service.spec.ports
@@ -183,6 +194,9 @@ function(params) {
             securityContext: tq.config.securityContext,
             serviceAccountName: tq.serviceAccount.metadata.name,
             terminationGracePeriodSeconds: 120,
+            nodeSelector: {
+              'kubernetes.io/os': 'linux',
+            },
             affinity: { podAntiAffinity: {
               preferredDuringSchedulingIgnoredDuringExecution: [{
                 podAffinityTerm: {

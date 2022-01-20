@@ -10,12 +10,10 @@ local defaults = {
   imagePullPolicy: 'IfNotPresent',
   replicas: error 'must provide replicas',
   reloaderImage: error 'must provide reloader image',
+  reloaderImagePullPolicy: 'IfNotPresent',
   objectStorageConfig: error 'must provide objectStorageConfig',
   ruleFiles: [],
   rulesConfig: [],
-  retention: '48h',
-  blockDuration: '2h',
-  evalInterval: '30s',
   alertmanagersURLs: [],
   alertmanagerConfigFile: {},
   extraVolumeMounts: [],
@@ -23,12 +21,16 @@ local defaults = {
   logLevel: 'info',
   logFormat: 'logfmt',
   resources: {},
+  retention: '48h',
+  blockDuration: '2h',
   serviceMonitor: false,
   ports: {
     grpc: 10901,
     http: 10902,
+    reloader: 9533,
   },
   tracing: {},
+  extraEnv: [],
 
   commonLabels:: {
     'app.kubernetes.io/name': 'thanos-rule',
@@ -57,10 +59,10 @@ function(params) {
   // Safety checks for combined config of defaults and params
   assert std.isNumber(tr.config.replicas) && tr.config.replicas >= 0 : 'thanos rule replicas has to be number >= 0',
   assert std.isArray(tr.config.ruleFiles),
-  assert std.isObject(tr.config.alertmanagerConfigFile),
-  assert std.isArray(tr.config.extraVolumeMounts),
   assert std.isArray(tr.config.rulesConfig),
   assert std.isArray(tr.config.alertmanagersURLs),
+  assert std.isObject(tr.config.alertmanagerConfigFile),
+  assert std.isArray(tr.config.extraVolumeMounts),
   assert std.isObject(tr.config.resources),
   assert std.isBoolean(tr.config.serviceMonitor),
   assert std.isObject(tr.config.volumeClaimTemplate),
@@ -120,14 +122,13 @@ function(params) {
           '--alert.label-drop=rule_replica',
           '--tsdb.retention=' + tr.config.retention,
           '--tsdb.block-duration=' + tr.config.blockDuration,
-          '--eval-interval=' + tr.config.evalInterval,
         ] +
         (['--query=%s' % querier for querier in tr.config.queriers]) +
         (['--rule-file=%s' % path for path in tr.config.ruleFiles]) +
         (['--alertmanagers.url=%s' % url for url in tr.config.alertmanagersURLs]) +
         (
           if tr.config.alertmanagerConfigFile != {} then [
-            '--alertmanagers.config-file=/etc/thanos/config/' + tr.config.alertmanagerConfigFile.name + '/' + tr.config.alertmanagerConfigFile.key
+            '--alertmanagers.config-file=/etc/thanos/config/' + tr.config.alertmanagerConfigFile.name + '/' + tr.config.alertmanagerConfigFile.key,
           ]
           else []
         ) + (
@@ -149,7 +150,18 @@ function(params) {
           key: tr.config.objectStorageConfig.key,
           name: tr.config.objectStorageConfig.name,
         } } },
-      ],
+        {
+          // Inject the host IP to make configuring tracing convenient.
+          name: 'HOST_IP_ADDRESS',
+          valueFrom: {
+            fieldRef: {
+              fieldPath: 'status.hostIP',
+            },
+          },
+        },
+      ] + (
+        if std.length(tr.config.extraEnv) > 0 then tr.config.extraEnv else []
+      ),
       ports: [
         { name: name, containerPort: tr.config.ports[name] }
         for name in std.objectFields(tr.config.ports)
@@ -164,13 +176,17 @@ function(params) {
           for ruleConfig in tr.config.rulesConfig
         ] else []
       ) + (
+        if tr.config.alertmanagerConfigFile != {} then [
+          { name: tr.config.alertmanagerConfigFile.name, mountPath: '/etc/thanos/config/' + tr.config.alertmanagerConfigFile.name, readOnly: true },
+        ] else []
+      ) + (
         if std.length(tr.config.extraVolumeMounts) > 0 then [
           { name: volumeMount.name, mountPath: volumeMount.mountPath }
           for volumeMount in tr.config.extraVolumeMounts
         ] else []
       ) + (
-        if tr.config.alertmanagerConfigFile != {} then [
-          { name: tr.config.alertmanagerConfigFile.name, mountPath: '/etc/thanos/config/' + tr.config.alertmanagerConfigFile.name }
+        if tr.config.objectStorageConfig != null && std.objectHas(tr.config.objectStorageConfig, 'tlsSecretName') && std.length(tr.config.objectStorageConfig.tlsSecretName) > 0 then [
+          { name: 'tls-secret', mountPath: tr.config.objectStorageConfig.tlsSecretMountPath },
         ] else []
       ),
       livenessProbe: { failureThreshold: 24, periodSeconds: 5, httpGet: {
@@ -191,35 +207,37 @@ function(params) {
     local reloadContainer = {
       name: 'configmap-reloader',
       image: tr.config.reloaderImage,
-      imagePullPolicy: tr.config.imagePullPolicy,
+      imagePullPolicy: tr.config.reloaderImagePullPolicy,
       args:
         [
           '-webhook-url=http://localhost:' + tr.service.spec.ports[1].port + '/-/reload',
         ] +
         (
           if std.length(tr.config.rulesConfig) > 0 then [
-            '-volume-dir=/etc/thanos/rules/' + ruleConfig.name for ruleConfig in tr.config.rulesConfig
-          ] else []
-        ) + (
-          if std.length(tr.config.extraVolumeMounts) > 0 then [
-            '-volume-dir=' + volumeMount.mountPath for volumeMount in tr.config.extraVolumeMounts
+            '-volume-dir=/etc/thanos/rules/' + ruleConfig.name
+            for ruleConfig in tr.config.rulesConfig
           ] else []
         ) + (
           if tr.config.alertmanagerConfigFile != {} then [
-            '-volume-dir=/etc/thanos/config/' + tr.config.alertmanagerConfigFile.name
+            '-volume-dir=/etc/thanos/config/' + tr.config.alertmanagerConfigFile.name,
+          ] else []
+        ) + (
+          if std.length(tr.config.extraVolumeMounts) > 0 then [
+            '-volume-dir=' + volumeMount.mountPath
+            for volumeMount in tr.config.extraVolumeMounts
           ] else []
         ),
       volumeMounts: [
         { name: ruleConfig.name, mountPath: '/etc/thanos/rules/' + ruleConfig.name }
         for ruleConfig in tr.config.rulesConfig
       ] + (
+        if tr.config.alertmanagerConfigFile != {} then [
+          { name: tr.config.alertmanagerConfigFile.name, mountPath: '/etc/thanos/config/' + tr.config.alertmanagerConfigFile.name },
+        ] else []
+      ) + (
         if std.length(tr.config.extraVolumeMounts) > 0 then [
           { name: volumeMount.name, mountPath: volumeMount.mountPath }
           for volumeMount in tr.config.extraVolumeMounts
-        ] else []
-      ) + (
-        if tr.config.alertmanagerConfigFile != {} then [
-          { name: tr.config.alertmanagerConfigFile.name, mountPath: '/etc/thanos/config/' + tr.config.alertmanagerConfigFile.name }
         ] else []
       ),
     };
@@ -244,35 +262,45 @@ function(params) {
             serviceAccountName: tr.serviceAccount.metadata.name,
             securityContext: tr.config.securityContext,
             containers: [c] +
-                        (if std.length(tr.config.rulesConfig) > 0 || std.length(tr.config.extraVolumeMounts) > 0 || tr.config.alertmanagerConfigFile != {} then [
-                          reloadContainer
-                        ] else []),
-            volumes: [] +
-            (
-              if std.length(tr.config.rulesConfig) > 0 then [
-                { name: ruleConfig.name, configMap: { name: ruleConfig.name } }
-                for ruleConfig in tr.config.rulesConfig
-              ] else []
-            ) +
-            (
-              if std.length(tr.config.extraVolumeMounts) > 0 then [
-                { name: volumeMount.name, } +
-                (
-                  if volumeMount.type == "configMap" then {
-                    configMap : { name: volumeMount.name }
-                  }
-                  else {
-                    secret : { name: volumeMount.name }
-                  }
-                )
-                for volumeMount in tr.config.extraVolumeMounts
-              ] else []
-            ) +
-            (
-              if tr.config.alertmanagerConfigFile != {} then [{
-                name: tr.config.alertmanagerConfigFile.name, configMap: { name: tr.config.alertmanagerConfigFile.name }
-              }] else []
-            ),
+                        (
+                          if std.length(tr.config.rulesConfig) > 0 || std.length(tr.config.extraVolumeMounts) > 0 || tr.config.alertmanagerConfigFile != {} then [
+                            reloadContainer,
+                          ] else []
+                        ),
+            volumes:
+              [] +
+              (
+                if std.length(tr.config.rulesConfig) > 0 then [
+                  { name: ruleConfig.name, configMap: { name: ruleConfig.name } }
+                  for ruleConfig in tr.config.rulesConfig
+                ] else []
+              ) + (
+                if tr.config.alertmanagerConfigFile != {} then [{
+                  name: tr.config.alertmanagerConfigFile.name,
+                  configMap: { name: tr.config.alertmanagerConfigFile.name },
+                }] else []
+              ) + (
+                if std.length(tr.config.extraVolumeMounts) > 0 then [
+                  { name: volumeMount.name } +
+                  (
+                    if volumeMount.type == 'configMap' then {
+                      configMap: { name: volumeMount.name },
+                    }
+                    else {
+                      secret: { name: volumeMount.name },
+                    }
+                  )
+                  for volumeMount in tr.config.extraVolumeMounts
+                ] else []
+              ) + (
+                if tr.config.objectStorageConfig != null && std.objectHas(tr.config.objectStorageConfig, 'tlsSecretName') && std.length(tr.config.objectStorageConfig.tlsSecretName) > 0 then [{
+                  name: 'tls-secret',
+                  secret: { secretName: tr.config.objectStorageConfig.tlsSecretName },
+                }] else []
+              ),
+            nodeSelector: {
+              'kubernetes.io/os': 'linux',
+            },
           },
         },
         volumeClaimTemplates: if std.length(tr.config.volumeClaimTemplate) > 0 then [tr.config.volumeClaimTemplate {
@@ -305,6 +333,7 @@ function(params) {
             targetLabel: 'instance',
           }],
         },
+        { port: 'reloader' },
       ],
     },
   },

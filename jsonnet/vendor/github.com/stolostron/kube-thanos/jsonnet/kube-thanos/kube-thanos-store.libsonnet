@@ -100,11 +100,27 @@ function(params) {
         ] else []
       ),
       env: [
-        { name: 'OBJSTORE_CONFIG', valueFrom: { secretKeyRef: {
-          key: ts.config.objectStorageConfig.key,
-          name: ts.config.objectStorageConfig.name,
-        } } },
-      ],
+        {
+          name: 'OBJSTORE_CONFIG',
+          valueFrom: {
+            secretKeyRef: {
+              key: ts.config.objectStorageConfig.key,
+              name: ts.config.objectStorageConfig.name,
+            },
+          },
+        },
+        {
+          // Inject the host IP to make configuring tracing convenient.
+          name: 'HOST_IP_ADDRESS',
+          valueFrom: {
+            fieldRef: {
+              fieldPath: 'status.hostIP',
+            },
+          },
+        },
+      ] + (
+        if std.length(ts.config.extraEnv) > 0 then ts.config.extraEnv else []
+      ),
       ports: [
         { name: name, containerPort: ts.config.ports[name] }
         for name in std.objectFields(ts.config.ports)
@@ -113,7 +129,11 @@ function(params) {
         name: 'data',
         mountPath: '/var/thanos/store',
         readOnly: false,
-      }],
+      }] + (
+        if std.objectHas(ts.config.objectStorageConfig, 'tlsSecretName') && std.length(ts.config.objectStorageConfig.tlsSecretName) > 0 then [
+          { name: 'tls-secret', mountPath: ts.config.objectStorageConfig.tlsSecretMountPath },
+        ] else []
+      ),
       livenessProbe: { failureThreshold: 8, periodSeconds: 30, httpGet: {
         scheme: 'HTTP',
         port: ts.config.ports.http,
@@ -148,8 +168,14 @@ function(params) {
             serviceAccountName: ts.serviceAccount.metadata.name,
             securityContext: ts.config.securityContext,
             containers: [c],
-            volumes: [],
+            volumes: if std.objectHas(ts.config.objectStorageConfig, 'tlsSecretName') && std.length(ts.config.objectStorageConfig.tlsSecretName) > 0 then [{
+              name: 'tls-secret',
+              secret: { secretName: ts.config.objectStorageConfig.tlsSecretName },
+            }] else [],
             terminationGracePeriodSeconds: 120,
+            nodeSelector: {
+              'kubernetes.io/os': 'linux',
+            },
             affinity: { podAntiAffinity: {
               preferredDuringSchedulingIgnoredDuringExecution: [{
                 podAffinityTerm: {
@@ -203,4 +229,5 @@ function(params) {
       ],
     },
   },
+  storeEndpoint:: 'dnssrv+_grpc._tcp.%s.%s.svc.cluster.local:%d' % [ts.service.metadata.name, ts.config.namespace, ts.config.ports.grpc],
 }
