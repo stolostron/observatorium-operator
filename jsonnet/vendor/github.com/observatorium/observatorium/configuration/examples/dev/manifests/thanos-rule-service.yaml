@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/instance: observatorium-xyz
     app.kubernetes.io/name: thanos-rule
     app.kubernetes.io/part-of: observatorium
-    app.kubernetes.io/version: v0.20.1
+    app.kubernetes.io/version: v0.24.0
   name: observatorium-xyz-thanos-rule
   namespace: observatorium
 spec:
@@ -18,6 +18,9 @@ spec:
   - name: http
     port: 10902
     targetPort: 10902
+  - name: reloader
+    port: 9533
+    targetPort: 9533
   selector:
     app.kubernetes.io/component: rule-evaluation-engine
     app.kubernetes.io/instance: observatorium-xyz

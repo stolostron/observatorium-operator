@@ -18,6 +18,7 @@ local operatorObs = obs {
       'app.kubernetes.io/part-of': 'observatorium',
     },
     image: if std.objectHas(cr.spec.thanos, 'image') then cr.spec.thanos.image else obs.thanos.config.image,
+    imagePullPolicy: if std.objectHas(cr.spec.thanos, 'imagePullPolicy') then cr.spec.thanos.imagePullPolicy else obs.thanos.config.imagePullPolicy,
     version: if std.objectHas(cr.spec.thanos, 'version') then cr.spec.thanos.version else obs.thanos.config.version,
     objectStorageConfig: cr.spec.objectStorageConfig.thanos,
     hashrings: cr.spec.hashrings,
