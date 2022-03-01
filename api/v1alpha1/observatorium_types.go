@@ -306,6 +306,28 @@ type TLS struct {
 	ReloadInterval string `json:"reloadInterval,omitempty"`
 }
 
+// Endpoint contains the configuration for an endpoint
+type Endpoint struct {
+	Name string `json:"name"`
+	URL  string `json:"url"`
+	// +optional
+	TLSConfig EndpointTLSConfig `json:"tlsConfig,omitempty"`
+	// +optional
+	BasicAuth EndpointBasicAuth `json:"basicAuth,omitempty"`
+}
+
+type EndpointTLSConfig struct {
+	SecretName string `json:"secretName"`
+	CAKey      string `json:"caKey"`
+	CertKey    string `json:"certKey"`
+	KeyKey     string `json:"keyKey"`
+}
+
+type EndpointBasicAuth struct {
+	User     string `json:"user"`
+	Password string `json:"password"`
+}
+
 type APISpec struct {
 	// API image
 	Image string `json:"image,omitempty"`
@@ -327,12 +349,9 @@ type APISpec struct {
 	// ServiceMonitor enables servicemonitor.
 	// +optional
 	ServiceMonitor bool `json:"serviceMonitor,omitempty"`
-	// WriteEndpoint is the write endpoint.
+	// AdditionalWriteEndpoints is a slice of additional write endpoint for the Observatorium API.
 	// +optional
-	WriteEndpoint string `json:"writeEndpoint,omitempty"`
-	// TenantHeader is the http header for tenant id.
-	// +optional
-	TenantHeader string `json:"tenantHeader,omitempty"`
+	AdditionalWriteEndpoints []Endpoint `json:"additionalWriteEndpoints,omitempty"`
 }
 
 type QuerySpec struct {

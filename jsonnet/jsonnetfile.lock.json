@@ -74,6 +74,17 @@
       "version": "55d79c62ffbf39c7a8f5973e5bf6421944b3aea6",
       "sum": "K3y2JG3FCgXv3zuiaUl2BIfwODpahnb9wphykDreoyI=",
       "name": "upstream-kube-thanos"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/stolostron/observatorium.git",
+          "subdir": "jsonnet/lib"
+        }
+      },
+      "version": "443f2179e8ceeef5e05bd651975502a046b04e21",
+      "sum": "8V3CiaWr+rFSSj0WFyzK5iB13pPMgjVk9aHEG9DKePM=",
+      "name": "observatorium"
     }
   ],
   "legacyImports": false
