@@ -378,44 +378,18 @@ spec:
                 properties:
                   additionalWriteEndpoints:
                     description: AdditionalWriteEndpoints is a slice of additional write endpoint for the Observatorium API.
-                    items:
-                      description: Endpoint contains the configuration for an endpoint
-                      properties:
-                        basicAuth:
-                          properties:
-                            password:
-                              type: string
-                            user:
-                              type: string
-                          required:
-                          - password
-                          - user
-                          type: object
-                        name:
+                    properties:
+                      endpointsConfigSecret:
+                        description: Secret name for the endpoints configuration
+                        type: string
+                      mountSecrets:
+                        description: Secret list to be mounted
+                        items:
                           type: string
-                        tlsConfig:
-                          properties:
-                            caKey:
-                              type: string
-                            certKey:
-                              type: string
-                            keyKey:
-                              type: string
-                            secretName:
-                              type: string
-                          required:
-                          - caKey
-                          - certKey
-                          - keyKey
-                          - secretName
-                          type: object
-                        url:
-                          type: string
-                      required:
-                      - name
-                      - url
-                      type: object
-                    type: array
+                        type: array
+                    required:
+                    - endpointsConfigSecret
+                    type: object
                   image:
                     description: API image
                     type: string
@@ -1261,9 +1235,6 @@ spec:
                       serviceMonitor:
                         description: ServiceMonitor enables servicemonitor.
                         type: boolean
-                      tenantHeader:
-                        description: TenantHeader is the http header for tenant id.
-                        type: string
                       volumeClaimTemplate:
                         description: VolumeClaimTemplate
                         properties:

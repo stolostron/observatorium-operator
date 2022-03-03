@@ -152,9 +152,6 @@ type ReceiversSpec struct {
 	// How long to retain raw samples on local storage
 	// +optional
 	Retention string `json:"retention,omitempty"`
-	// TenantHeader is the http header for tenant id.
-	// +optional
-	TenantHeader string `json:"tenantHeader,omitempty"`
 }
 
 type StoreSpec struct {
@@ -306,26 +303,13 @@ type TLS struct {
 	ReloadInterval string `json:"reloadInterval,omitempty"`
 }
 
-// Endpoint contains the configuration for an endpoint
-type Endpoint struct {
-	Name string `json:"name"`
-	URL  string `json:"url"`
+// EndpointsConfig contains the configuration for all endpoints
+type EndpointsConfig struct {
+	// Secret name for the endpoints configuration
+	EndpointsConfigSecret string `json:"endpointsConfigSecret"`
+	// Secret list to be mounted
 	// +optional
-	TLSConfig EndpointTLSConfig `json:"tlsConfig,omitempty"`
-	// +optional
-	BasicAuth EndpointBasicAuth `json:"basicAuth,omitempty"`
-}
-
-type EndpointTLSConfig struct {
-	SecretName string `json:"secretName"`
-	CAKey      string `json:"caKey"`
-	CertKey    string `json:"certKey"`
-	KeyKey     string `json:"keyKey"`
-}
-
-type EndpointBasicAuth struct {
-	User     string `json:"user"`
-	Password string `json:"password"`
+	MountSecrets []string `json:"mountSecrets,omitempty"`
 }
 
 type APISpec struct {
@@ -351,7 +335,7 @@ type APISpec struct {
 	ServiceMonitor bool `json:"serviceMonitor,omitempty"`
 	// AdditionalWriteEndpoints is a slice of additional write endpoint for the Observatorium API.
 	// +optional
-	AdditionalWriteEndpoints []Endpoint `json:"additionalWriteEndpoints,omitempty"`
+	AdditionalWriteEndpoints *EndpointsConfig `json:"additionalWriteEndpoints,omitempty"`
 }
 
 type QuerySpec struct {
