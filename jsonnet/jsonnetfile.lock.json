@@ -8,8 +8,8 @@
           "subdir": "jsonnet/lib"
         }
       },
-      "version": "c8691fa6eb610fc88b877069304be0320393caac",
-      "sum": "PeiropwPLWC8g7o0xaH0clwLoYHTngNJKtaTaEh+hc0=",
+      "version": "b3a191802b501fb6051e73f2f986240e1e406be4",
+      "sum": "22T84MojWGsw3EoXp8Ag3zP4rRucp1IpP5aC5umFqnY=",
       "name": "observatorium-api"
     },
     {
@@ -19,7 +19,7 @@
           "subdir": "configuration"
         }
       },
-      "version": "60bbf7ac4baac885449866d07ffdce30047330f4",
+      "version": "e17d1d9cb34615a292aa23e46c8a964109014d27",
       "sum": "IHlHbcCdcJlnwCjfpNP2BNeIZRPHYjRei5bxvHV9xsA="
     },
     {
@@ -40,7 +40,7 @@
           "subdir": "jsonnet"
         }
       },
-      "version": "21b9125fa700ce2f2472caef720086179329b33e",
+      "version": "098c31ad09f7eab87796b7f91e5caddc6c41bd60",
       "sum": "0FKabnXd0rMeu8YpkkopEOknqBf5PLq/DIIDd0ve7cU=",
       "name": "up"
     },
@@ -61,8 +61,8 @@
           "subdir": "jsonnet/lib"
         }
       },
-      "version": "50ffaec20114a46691d549bf3a881c42fba4e8e3",
-      "sum": "FNZlZ8ImUS/MhQhtFqOOiLKxG6+g1cx2TIJNFf1ONF0="
+      "version": "c496d90111113482410aef9b4116ec39336160b1",
+      "sum": "TkAnSKP+77f4PgOula25Ie08Fb1wTWrPf/jjBdJdWOA="
     },
     {
       "source": {
@@ -71,20 +71,9 @@
           "subdir": "jsonnet/kube-thanos"
         }
       },
-      "version": "55d79c62ffbf39c7a8f5973e5bf6421944b3aea6",
-      "sum": "K3y2JG3FCgXv3zuiaUl2BIfwODpahnb9wphykDreoyI=",
+      "version": "6328583a623765ed6ebf18064a301104def57420",
+      "sum": "9XtRX02CoqEIb2BHJ0nDhuV6VvncFBanwQRFd60qYGg=",
       "name": "upstream-kube-thanos"
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/stolostron/observatorium.git",
-          "subdir": "jsonnet/lib"
-        }
-      },
-      "version": "443f2179e8ceeef5e05bd651975502a046b04e21",
-      "sum": "8V3CiaWr+rFSSj0WFyzK5iB13pPMgjVk9aHEG9DKePM=",
-      "name": "observatorium"
     }
   ],
   "legacyImports": false
