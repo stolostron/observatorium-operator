@@ -152,6 +152,9 @@ type ReceiversSpec struct {
 	// How long to retain raw samples on local storage
 	// +optional
 	Retention string `json:"retention,omitempty"`
+	// Annotations is an unstructured key value map stored with a service account
+	// +optional
+	ServiceAccountAnnotations map[string]string `json:"serviceAccountAnnotations,omitempty"`
 }
 
 type StoreSpec struct {
@@ -166,6 +169,9 @@ type StoreSpec struct {
 	// ServiceMonitor enables servicemonitor.
 	// +optional
 	ServiceMonitor bool `json:"serviceMonitor,omitempty"`
+	// Annotations is an unstructured key value map stored with a service account
+	// +optional
+	ServiceAccountAnnotations map[string]string `json:"serviceAccountAnnotations,omitempty"`
 }
 
 // MemCacheSpec describes configuration for Store Memcached
@@ -353,6 +359,9 @@ type QuerySpec struct {
 	// The maximum lookback duration for retrieving metrics during expression evaluations.
 	// +optional
 	LookbackDelta string `json:"lookbackDelta,omitempty"`
+	// Annotations is an unstructured key value map stored with a service account
+	// +optional
+	ServiceAccountAnnotations map[string]string `json:"serviceAccountAnnotations,omitempty"`
 }
 
 type RuleConfig struct {
@@ -428,6 +437,9 @@ type RuleSpec struct {
 	// Evaluation interval
 	// +optional
 	EvalInterval string `json:"evalInterval,omitempty"`
+	// Annotations is an unstructured key value map stored with a service account
+	// +optional
+	ServiceAccountAnnotations map[string]string `json:"serviceAccountAnnotations,omitempty"`
 }
 
 type CompactSpec struct {
@@ -452,6 +464,8 @@ type CompactSpec struct {
 	// Time before a block marked for deletion is deleted from bucket
 	// +optional
 	DeleteDelay string `json:"deleteDelay,omitempty"`
+	// Annotations is an unstructured key value map stored with a service account
+	ServiceAccountAnnotations map[string]string `json:"serviceAccountAnnotations,omitempty"`
 }
 
 type VolumeClaimTemplate struct {

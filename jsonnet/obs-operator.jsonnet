@@ -168,6 +168,26 @@ local operatorObs = obs {
       if (v.kind == 'StatefulSet' && std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-query-frontend-memcached')) then {
         name: 'observability-thanos-query-frontend-memcached',
       } else {}
+    ) + (
+      if (std.objectHas(cr.spec.thanos.compact, 'serviceAccountAnnotations') && v.kind == 'ServiceAccount' && std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-compact')) then {
+        annotations+: cr.spec.thanos.compact.serviceAccountAnnotations,
+      } else {}
+    ) + (
+      if (std.objectHas(cr.spec.thanos.query, 'serviceAccountAnnotations') && v.kind == 'ServiceAccount' && std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-query')) then {
+        annotations+: cr.spec.thanos.query.serviceAccountAnnotations,
+      } else {}
+    ) + (
+      if (std.objectHas(cr.spec.thanos.store, 'serviceAccountAnnotations') && v.kind == 'ServiceAccount' && std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-shard')) then {
+        annotations+: cr.spec.thanos.store.serviceAccountAnnotations,
+      } else {}
+    ) + (
+      if (std.objectHas(cr.spec.thanos.receivers, 'serviceAccountAnnotations') && v.kind == 'ServiceAccount' && std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-receive')) then {
+        annotations+: cr.spec.thanos.store.serviceAccountAnnotations,
+      } else {}
+    ) + (
+      if (std.objectHas(cr.spec.thanos.rule, 'serviceAccountAnnotations') && v.kind == 'ServiceAccount' && std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-rule')) then {
+        annotations+: cr.spec.thanos.store.serviceAccountAnnotations,
+      } else {}
     ),
     spec+: (
       if (std.objectHas(cr.spec, 'nodeSelector') && (v.kind == 'StatefulSet' || v.kind == 'Deployment')) then {
