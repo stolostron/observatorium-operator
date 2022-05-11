@@ -10,7 +10,6 @@ Currently, this includes:
 
 For more information on the operator, see the [Observatorium Operator documentation](./docs/deploy-operator.md).
 
-
 ## Development
 
 We provide a few make commands that should help you getting started with development a bit quicker.
