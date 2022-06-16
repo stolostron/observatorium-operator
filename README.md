@@ -20,4 +20,4 @@ Then there is `make manifests` which is going to generate all manifest YAML file
 
 If you need to update the dependencies for jsonnet simply use `make jsonnet-update` or more specifically `make jsonnet-update-deployments`.
 
-Rebuild Image: Thu May 19 12:05:04 EDT 2022
+Rebuild Image: Thu Jun 16 10:19:08 EDT 2022
