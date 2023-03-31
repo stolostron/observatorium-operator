@@ -53,8 +53,8 @@ local dex = (import 'github.com/observatorium/observatorium/configuration/compon
     hashrings: obs.thanos.config.hashrings,
 
     thanos: {
-      image: 'quay.io/thanos/thanos:v0.18.0',
-      version: 'v0.18.0',
+      image: 'quay.io/thanos/thanos:v0.29.0',
+      version: 'v0.29.0',
       queryFrontend: {
         replicas: obs.thanos.queryFrontend.config.replicas,
         cache: {

@@ -11,9 +11,11 @@ local defaults = {
   replicas: error 'must provide replicas',
   replicaLabels: error 'must provide replicaLabels',
   stores: ['dnssrv+_grpc._tcp.thanos-store.%s.svc.cluster.local' % defaults.namespace],
+  rules: [],  // TODO(bwplotka): This is deprecated, switch to endpoints while ready.
   externalPrefix: '',
   prefixHeader: '',
   autoDownsampling: true,
+  useThanosEngine: false,
   resources: {},
   queryTimeout: '',
   lookbackDelta: '',
@@ -44,6 +46,7 @@ local defaults = {
     fsGroup: 65534,
     runAsUser: 65534,
   },
+  serviceAccountAnnotations:: {},
 };
 
 function(params) {
@@ -59,6 +62,7 @@ function(params) {
   assert std.isString(tq.config.queryTimeout),
   assert std.isBoolean(tq.config.serviceMonitor),
   assert std.isBoolean(tq.config.autoDownsampling),
+  assert std.isBoolean(tq.config.useThanosEngine),
 
   service: {
     apiVersion: 'v1',
@@ -91,6 +95,7 @@ function(params) {
       name: tq.config.name,
       namespace: tq.config.namespace,
       labels: tq.config.commonLabels,
+      annotations: tq.config.serviceAccountAnnotations,
     },
   },
 
@@ -112,6 +117,9 @@ function(params) {
         ] + [
           '--store=%s' % store
           for store in tq.config.stores
+        ] + [
+          '--rule=%s' % store
+          for store in tq.config.rules
         ] +
         (
           if tq.config.externalPrefix != '' then [
@@ -141,6 +149,10 @@ function(params) {
         ) + (
           if tq.config.autoDownsampling then [
             '--query.auto-downsampling',
+          ] else []
+        ) + (
+          if tq.config.useThanosEngine then [
+            '--query.promql-engine=thanos',
           ] else []
         ),
       env: [

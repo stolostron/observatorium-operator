@@ -1,8 +1,8 @@
 local cr = import 'generic-operator/config';
-local thanos = (import 'github.com/observatorium/observatorium/configuration/components/thanos.libsonnet');
+local thanos = (import 'stolo-configuration/components/thanos.libsonnet');
 local loki = (import 'github.com/observatorium/observatorium/configuration/components/loki.libsonnet');
 local api = (import 'lib/observatorium-api.libsonnet');
-local obs = (import 'github.com/observatorium/observatorium/configuration/components/observatorium.libsonnet');
+local obs = (import 'stolo-configuration/components/observatorium.libsonnet');
 
 local operatorObs = obs {
 
@@ -46,6 +46,8 @@ local operatorObs = obs {
       local deleteDelay = if std.objectHas(cr.spec.thanos, 'compact') && std.objectHas(cr.spec.thanos.compact, 'deleteDelay') then cr.spec.thanos.compact.deleteDelay else obs.thanos.compact.config.deleteDelay,
       securityContext: if std.objectHas(cr.spec, 'securityContext') then cr.spec.securityContext else obs.thanos.stores.config.securityContext,
       ignoreDeletionMarksDelay: std.ceil(std.parseInt(std.substr(deleteDelay, 0, std.length(deleteDelay) - 1)) / 2) + std.substr(deleteDelay, std.length(deleteDelay) - 1, std.length(deleteDelay)),
+      local maxItemSize = if std.objectHas(cr.spec.thanos, 'store') && std.objectHas(cr.spec.thanos.store, 'cache') && std.objectHas(cr.spec.thanos.store.cache, 'maxItemSize') then cr.spec.thanos.store.cache.maxItemSize else obs.thanos.stores.config.maxItemSize,
+      maxItemSize: std.strReplace(std.strReplace(maxItemSize, "m", "MiB"), "g", "GiB"),
     } + if std.objectHas(cr.spec.thanos, 'store') then cr.spec.thanos.store else {},
 
     storeCache+:: (if std.objectHas(cr.spec.thanos, 'store') && std.objectHas(cr.spec.thanos.store, 'cache') then cr.spec.thanos.store.cache else {}) + {
@@ -68,6 +70,8 @@ local operatorObs = obs {
 
     queryFrontend+:: {
       securityContext: if std.objectHas(cr.spec, 'securityContext') then cr.spec.securityContext else obs.thanos.queryFrontend.config.securityContext,
+      local maxItemSize = if std.objectHas(cr.spec.thanos, 'queryFrontend') && std.objectHas(cr.spec.thanos.queryFrontend, 'cache') && std.objectHas(cr.spec.thanos.queryFrontend.cache, 'maxItemSize') then cr.spec.thanos.queryFrontend.cache.maxItemSize else obs.thanos.queryFrontend.config.maxItemSize,
+      maxItemSize: std.strReplace(std.strReplace(maxItemSize, "m", "MiB"), "g", "GiB"),
     } + if std.objectHas(cr.spec.thanos, 'queryFrontend') then cr.spec.thanos.queryFrontend else {},
 
     queryFrontendCache+:: (if std.objectHas(cr.spec.thanos, 'queryFrontend') && std.objectHas(cr.spec.thanos.queryFrontend, 'cache') then cr.spec.thanos.queryFrontend.cache else {}) + {

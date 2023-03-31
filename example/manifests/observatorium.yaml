@@ -49,30 +49,7 @@ spec:
   hashrings:
   - hashring: default
     tenants: []
-  loki:
-    image: docker.io/grafana/loki:2.2.0
-    replicas:
-      compactor: 1
-      distributor: 1
-      ingester: 1
-      querier: 1
-      query_frontend: 1
-    version: 2.2.0
-    volumeClaimTemplate:
-      spec:
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: 250Mi
   objectStorageConfig:
-    loki:
-      accessKeyIdKey: aws_access_key_id
-      bucketsKey: buckets
-      endpointKey: endpoint
-      regionKey: region
-      secretAccessKeyKey: aws_secret_access_key
-      secretName: loki-objectstorage
     thanos:
       key: thanos.yaml
       name: thanos-objectstorage
@@ -91,7 +68,7 @@ spec:
           resources:
             requests:
               storage: 50Gi
-    image: quay.io/thanos/thanos:v0.18.0
+    image: quay.io/thanos/thanos:v0.29.0
     query:
       replicas: 1
     queryFrontend:
@@ -137,4 +114,4 @@ spec:
           resources:
             requests:
               storage: 50Gi
-    version: v0.18.0
+    version: v0.29.0

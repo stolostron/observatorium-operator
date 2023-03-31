@@ -6,7 +6,7 @@ local defaults = receiveConfigDefaults {
     hashring: 'default',
     tenants: [],
   }],
-  hashringConfigmapName: 'hashring-config',
+  hashringConfigMapName: 'hashring-config',
   routerReplicas: 1,
 };
 
@@ -42,4 +42,5 @@ function(params) {
     for name in tr.config.hashrings
   },
   serviceAccount: ingestors.serviceAccount,
+  serviceMonitor: if tr.config.serviceMonitor then ingestors.serviceMonitor,
 }

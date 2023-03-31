@@ -17,9 +17,11 @@
   retentionResolutionRaw: '0d',
   retentionResolution5m: '0d',
   retentionResolution1h: '0d',
+  compactConcurrency: 1,
+  deduplicationReplicaLabels: [],
   deleteDelay: '48h',
   disableDownsampling: false,
-  deduplicationReplicaLabels: [],
+  downsampleConcurrency: 1,
   ports: {
     http: 10902,
   },
@@ -43,4 +45,6 @@
     fsGroup: 65534,
     runAsUser: 65534,
   },
+
+  serviceAccountAnnotations:: {},
 }

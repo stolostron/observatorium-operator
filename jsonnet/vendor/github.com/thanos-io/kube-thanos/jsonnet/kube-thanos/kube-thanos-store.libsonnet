@@ -22,6 +22,10 @@ function(params) {
 
   // Safety checks for combined config of defaults and params
   assert std.isNumber(ts.config.replicas) && ts.config.replicas >= 0 : 'thanos store replicas has to be number >= 0',
+  assert std.isObject(ts.config.limits) : 'thanos store limits has to be an object',
+  assert std.isNumber(ts.config.limits.seriesTouched) && ts.config.limits.seriesTouched >= 0 : 'thanos store series touched limit has to be number >= 0',
+  assert std.isNumber(ts.config.limits.seriesSample) && ts.config.limits.seriesSample >= 0 : 'thanos store series sample limit has to be number >= 0',
+  assert std.isNumber(ts.config.limits.downloadedBytes) && ts.config.limits.downloadedBytes >= 0 : 'thanos store series download bytes limit has to be number >= 0',
   assert std.isObject(ts.config.resources),
   assert std.isBoolean(ts.config.serviceMonitor),
   assert std.isObject(ts.config.volumeClaimTemplate),
@@ -59,6 +63,7 @@ function(params) {
       name: ts.config.name,
       namespace: ts.config.namespace,
       labels: ts.config.commonLabels,
+      annotations: ts.config.serviceAccountAnnotations,
     },
   },
 
@@ -87,6 +92,18 @@ function(params) {
       ) + (
         if std.length(ts.config.minTime) > 0 then [
           '--min-time=' + ts.config.minTime,
+        ] else []
+      ) + (
+        if ts.config.limits.seriesTouched > 0 then [
+          '--store.grpc.touched-series-limit=' + ts.config.limits.seriesTouched,
+        ] else []
+      ) + (
+        if ts.config.limits.seriesSample > 0 then [
+          '--store.grpc.series-sample-limit=' + ts.config.limits.seriesSample,
+        ] else []
+      ) + (
+        if ts.config.limits.downloadedBytes > 0 then [
+          '--store.grpc.downloaded-bytes-limit=' + ts.config.limits.downloadedBytes,
         ] else []
       ) + (
         if std.length(ts.config.maxTime) > 0 then [
@@ -134,11 +151,16 @@ function(params) {
           { name: 'tls-secret', mountPath: ts.config.objectStorageConfig.tlsSecretMountPath },
         ] else []
       ),
-      livenessProbe: { failureThreshold: 8, periodSeconds: 30, httpGet: {
-        scheme: 'HTTP',
-        port: ts.config.ports.http,
-        path: '/-/healthy',
-      } },
+      livenessProbe: {
+        failureThreshold: ts.config.livenessProbe.failureThreshold,
+        periodSeconds: ts.config.livenessProbe.periodSeconds,
+        timeoutSeconds: ts.config.livenessProbe.timeoutSeconds,
+        httpGet: {
+          scheme: 'HTTP',
+          port: ts.config.ports.http,
+          path: '/-/healthy',
+        },
+      },
       readinessProbe: { failureThreshold: 20, periodSeconds: 5, httpGet: {
         scheme: 'HTTP',
         port: ts.config.ports.http,

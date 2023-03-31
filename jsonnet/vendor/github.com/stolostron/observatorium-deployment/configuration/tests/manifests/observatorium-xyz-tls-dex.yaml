@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dex-tls
+  namespace: dex
+stringData:
+  tls.crt: |
+    -----BEGIN CERTIFICATE-----
+    MIICWzCCAgGgAwIBAgIUUOqKpzoeqIVt4f3aU6TRx/z/z4AwCgYIKoZIzj0EAwIw
+    GDEWMBQGA1UEAxMNb2JzZXJ2YXRvcml1bTAeFw0yMzAxMDkyMDQ5MDBaFw0yNDAx
+    MDkyMDQ5MDBaME4xTDBKBgNVBAMTQ29ic2VydmF0b3JpdW0teHl6LW9ic2VydmF0
+    b3JpdW0tYXBpLm9ic2VydmF0b3JpdW0uc3ZjLmNsdXN0ZXIubG9jYWwwWTATBgcq
+    hkjOPQIBBggqhkjOPQMBBwNCAATRFSs5DDOvjDoscibWZaBs157hAfjAxC2iK+/y
+    JTjs7ZEdp5LEtr7EuPr35Elg9Wt7ffNyLLHSowgaNgutjWlEo4HyMIHvMA4GA1Ud
+    DwEB/wQEAwIFoDATBgNVHSUEDDAKBggrBgEFBQcDATAMBgNVHRMBAf8EAjAAMB0G
+    A1UdDgQWBBTlC2KSLdlAOnwsCaAUTs+brLXaDzAfBgNVHSMEGDAWgBRmbXUbjpHo
+    hBIMWsJKOKE8cKxjKjB6BgNVHREEczBxgglsb2NhbGhvc3SCGWRleC5kZXguc3Zj
+    LmNsdXN0ZXIubG9jYWyCQ29ic2VydmF0b3JpdW0teHl6LW9ic2VydmF0b3JpdW0t
+    YXBpLm9ic2VydmF0b3JpdW0uc3ZjLmNsdXN0ZXIubG9jYWyHBH8AAAEwCgYIKoZI
+    zj0EAwIDSAAwRQIhAKwVBJlYkUvGalZo4dYnTsn/nP98rBRHy7MTqDPbCzhJAiB2
+    J/xLit0OypdFVZc8LF1/bPQ5rKOk43DiMkLCHhqyDg==
+    -----END CERTIFICATE-----
+  tls.key: |
+    -----BEGIN EC PRIVATE KEY-----
+    MHcCAQEEII/9+PcxZohfsPy8u8pR1qdv/Yqpat9Dg/1Rri3kRmS9oAoGCCqGSM49
+    AwEHoUQDQgAE0RUrOQwzr4w6LHIm1mWgbNee4QH4wMQtoivv8iU47O2RHaeSxLa+
+    xLj69+RJYPVre33zciyx0qMIGjYLrY1pRA==
+    -----END EC PRIVATE KEY-----
