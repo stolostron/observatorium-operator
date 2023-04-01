@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "dependencies": [
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/observatorium/api.git",
+          "subdir": "jsonnet/lib"
+        }
+      },
+      "version": "main",
+      "name": "observatorium-api"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/observatorium/thanos-receive-controller.git",
+          "subdir": "jsonnet/lib"
+        }
+      },
+      "version": "master",
+      "name": "thanos-receive-controller"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/observatorium/token-refresher.git",
+          "subdir": "jsonnet/lib"
+        }
+      },
+      "version": "master",
+      "name": "token-refresher"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/observatorium/up.git",
+          "subdir": "jsonnet"
+        }
+      },
+      "version": "master",
+      "name": "up"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/prometheus-operator/kube-prometheus.git",
+          "subdir": "jsonnet/kube-prometheus"
+        }
+      },
+      "version": "main"
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/thanos-io/kube-thanos.git",
+          "subdir": "jsonnet/kube-thanos"
+        }
+      },
+      "version": "main"
+    }
+  ],
+  "legacyImports": true
+}

@@ -4,7 +4,7 @@ FROM registry.ci.openshift.org/stolostron/builder:go1.18-linux AS builder
 WORKDIR /workspace
 # Copy the jsonnet source
 COPY . operator/
-COPY ./jsonnet/vendor/github.com/observatorium/observatorium/configuration/components/ components/
+COPY ./jsonnet/vendor/stolo-configuration/components/ components/
 
 # Build
 WORKDIR /workspace/operator

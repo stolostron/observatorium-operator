@@ -45,6 +45,7 @@ function(params) {
       name: tr.config.name,
       namespace: tr.config.namespace,
       labels: tr.config.commonLabels,
+      annotations: tr.config.serviceAccountAnnotations,
     },
   },
 
@@ -254,7 +255,7 @@ function(params) {
   },
 
   podDisruptionBudget: if tr.config.podDisruptionBudgetMaxUnavailable >= 1 then {
-    apiVersion: 'policy/v1beta1',
+    apiVersion: 'policy/v1',
     kind: 'PodDisruptionBudget',
     metadata: {
       name: tr.config.name,

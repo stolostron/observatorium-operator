@@ -5,7 +5,7 @@ local defaults = receiveConfigDefaults {
     hashring: 'default',
     tenants: [],
   }],
-  hashringConfigmapName: 'hashring-config',
+  hashringConfigMapName: 'hashring-config',
   routerReplicas: 1,
   endpoints: error 'must provide ingestor endpoints object',
 };
@@ -25,9 +25,20 @@ function(params) {
     metadata: {
       name: tr.config.name + '-router',
       namespace: tr.config.namespace,
+      labels: tr.routerLabels,
     },
     spec: {
-      ports: [{ name: name, port: tr.config.ports[name] } for name in std.objectFields(tr.config.ports)],
+      ports: [
+        {
+          assert std.isString(name),
+          assert std.isNumber(tr.config.ports[name]),
+
+          name: name,
+          port: tr.config.ports[name],
+          targetPort: tr.config.ports[name],
+        }
+        for name in std.objectFields(tr.config.ports)
+      ],
       selector: tr.routerLabels,
     },
   },
@@ -39,6 +50,7 @@ function(params) {
       name: tr.config.name + '-router',
       namespace: tr.config.namespace,
       labels: tr.routerLabels,
+      annotations: tr.config.serviceAccountAnnotations,
     },
   },
 
@@ -46,7 +58,7 @@ function(params) {
     apiVersion: 'v1',
     kind: 'ConfigMap',
     metadata: {
-      name: tr.config.hashringConfigmapName,
+      name: tr.config.hashringConfigMapName,
       namespace: tr.config.namespace,
     },
     data: {

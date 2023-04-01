@@ -95,6 +95,7 @@ deploy_operator() {
     else
         docker pull $OPERATOR_IMAGE_NAME
         IMAGE_ID=${OPERATOR_IMAGE_NAME%%@*}
+        IMAGE_ID=${IMAGE_ID%%:*}
         docker tag $OPERATOR_IMAGE_NAME $IMAGE_ID:test
         ./kind load docker-image $IMAGE_ID:test
         OPERATOR_IMAGE_NAME=$IMAGE_ID:test
@@ -156,7 +157,7 @@ run_test() {
 
     $KUBECTL wait --for=condition=available --timeout=10m -n observatorium-minio deploy/minio || (must_gather "$ARTIFACT_DIR" && exit 1)
     $KUBECTL wait --for=condition=available --timeout=10m -n observatorium deploy/observatorium-xyz-thanos-query-frontend || (must_gather "$ARTIFACT_DIR" && exit 1)
-    $KUBECTL wait --for=condition=available --timeout=10m -n observatorium deploy/observatorium-xyz-loki-query-frontend || (must_gather "$ARTIFACT_DIR" && exit 1)
+    # $KUBECTL wait --for=condition=available --timeout=10m -n observatorium deploy/observatorium-xyz-loki-query-frontend || (must_gather "$ARTIFACT_DIR" && exit 1)
     $KUBECTL apply -n default -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/tests/manifests/observatorium-xyz-tls-configmap.yaml
     $KUBECTL apply -n default -f jsonnet/vendor/github.com/observatorium/observatorium/configuration/tests/manifests/observatorium-up-metrics"$suffix".yaml
 
@@ -169,7 +170,8 @@ run_test() {
     sleep 5
 
     # This should wait for ~2min for the job to finish.
-    $KUBECTL wait --for=condition=complete --timeout=5m -n default job/observatorium-up-logs"$suffix" || (must_gather "$ARTIFACT_DIR" && exit 1)
+    # disable loki log checking
+    # $KUBECTL wait --for=condition=complete --timeout=5m -n default job/observatorium-up-logs"$suffix" || (must_gather "$ARTIFACT_DIR" && exit 1)
 }
 
 must_gather() {

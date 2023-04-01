@@ -13,6 +13,16 @@
     {
       "source": {
         "git": {
+          "remote": "https://github.com/stolostron/observatorium-deployment.git",
+          "subdir": "configuration"
+        }
+      },
+      "version": "main",
+      "name": "stolo-configuration"
+    },
+    {
+      "source": {
+        "git": {
           "remote": "https://github.com/stolostron/kube-thanos.git",
           "subdir": "jsonnet/kube-thanos"
         }
