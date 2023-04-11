@@ -755,7 +755,7 @@ spec:
                         description: Object Store Config Secret Name
                         type: string
                       serviceAccountProjection:
-                        description: Whether mount service account token in thanos store/ruler/compact/receiver
+                        description: When set to true, mounts service account token in thanos store, ruler, compact and receiver pods. Default is false.
                         type: boolean
                       tlsSecretMountPath:
                         description: TLS secret mount path in thanos store/ruler/compact/receiver
