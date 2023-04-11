@@ -99,6 +99,9 @@ type ThanosObjectStorageConfigSpec struct {
 	// TLS secret mount path in thanos store/ruler/compact/receiver
 	// +optional
 	TLSSecretMountPath string `json:"tlsSecretMountPath"`
+	// Whether mount service account token in thanos store/ruler/compact/receiver
+	// +optional
+	ServiceAccountProjection bool `json:"serviceAccountProjection"`	
 }
 
 type LokiObjectStorageConfigSpec struct {

@@ -374,6 +374,47 @@ local operatorObs = obs {
           },
         },
       } else {}
+    ) + (
+      if (std.objectHas(cr.spec.objectStorageConfig.thanos, 'serviceAccountProjection') && 
+        cr.spec.objectStorageConfig.thanos.serviceAccountProjection == true) && 
+        (v.kind == 'StatefulSet' && (
+        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-compact') || 
+        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-receive') || 
+        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-rule') || 
+        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-shard'))) then {
+        template+: {
+          spec+: {
+            containers: [
+              if std.startsWith(c.name, 'thanos-') then c {
+                volumeMounts+:
+                  [
+                    {
+                      name: 'bound-sa-token',
+                      mountPath: '/var/run/secrets/openshift/serviceaccount',
+                      readOnly: true,
+                    }
+                  ]
+              } else c
+              for c in super.containers
+            ],
+            volumes+: [
+              {
+                name: 'bound-sa-token',
+                projected: {
+                  sources: [
+                    {
+                      serviceAccountToken: {
+                        path: 'token',
+                        audience: 'openshift',
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      } else {}
     ),
   }, operatorObs.manifests),
 }
