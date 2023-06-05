@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM registry.ci.openshift.org/stolostron/builder:go1.18-linux AS builder
+FROM registry.ci.openshift.org/stolostron/builder:go1.20-linux AS builder
 
 WORKDIR /workspace
 # Copy the jsonnet source
@@ -8,12 +8,13 @@ COPY ./jsonnet/vendor/stolo-configuration/components/ components/
 
 # Build
 WORKDIR /workspace/operator
-RUN GO111MODULE="on" CGO_ENABLED=0 go build github.com/brancz/locutus
+RUN git clone https://github.com/stolostron/locutus --branch release-2.8
+RUN cd locutus; GO111MODULE="on" CGO_ENABLED=0 go build
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 WORKDIR /
-COPY --from=builder /workspace/operator/locutus /
+COPY --from=builder /workspace/operator/locutus/locutus /locutus
 COPY --from=builder /workspace/operator/jsonnet /
 COPY --from=builder /workspace/components/ /components/
 COPY --from=builder /workspace/operator/jsonnet/vendor/ /vendor/
