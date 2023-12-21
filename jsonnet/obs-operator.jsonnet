@@ -4,6 +4,15 @@ local loki = (import 'github.com/observatorium/observatorium/configuration/compo
 local api = (import 'lib/observatorium-api.libsonnet');
 local obs = (import 'stolo-configuration/components/observatorium.libsonnet');
 
+local override_containers(org_containers, custom_containers) =
+[
+  if (c.name == custom_container.name) then c {
+    args: custom_container.args
+  } else c
+  for custom_container in custom_containers
+  for c in org_containers
+];
+
 local operatorObs = obs {
 
   config+:: {
@@ -412,6 +421,77 @@ local operatorObs = obs {
                 },
               },
             ],
+          },
+        },
+      } else {}
+    ) + (
+      if (v.kind == 'StatefulSet' &&
+        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-receive') &&
+        std.objectHas(cr.spec.thanos.receivers, 'containers')) then {
+        template+: {
+          spec+: {
+            containers: override_containers(super.containers, cr.spec.thanos.receivers.containers)
+          },
+        },
+      } else {}
+    ) + (
+      if (v.kind == 'StatefulSet' &&
+        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-shard') &&
+        std.objectHas(cr.spec.thanos.store, 'containers')) then {
+        template+: {
+          spec+: {
+            containers: override_containers(super.containers, cr.spec.thanos.store.containers)
+          },
+        },
+      } else {}
+    ) + (
+      if (v.kind == 'StatefulSet' &&
+        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-memcached') &&
+        std.objectHas(cr.spec.thanos.store.cache, 'containers')) then {
+        template+: {
+          spec+: {
+            containers: override_containers(super.containers, cr.spec.thanos.store.containers)
+          },
+        },
+      } else {}
+    ) + (
+      // Will this also apply to QFE??
+      if (v.kind == 'Deployment' &&
+        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-query') &&
+        std.objectHas(cr.spec.thanos.query, 'containers')) then {
+        template+: {
+          spec+: {
+            containers: override_containers(super.containers, cr.spec.thanos.query.containers)
+          },
+        },
+      } else {}
+    ) + (
+      if (v.kind == 'Deployment' &&
+        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-query-frontend') &&
+        std.objectHas(cr.spec.thanos.queryFrontend, 'containers')) then {
+        template+: {
+          spec+: {
+            containers: override_containers(super.containers, cr.spec.thanos.queryFrontend.containers)
+          },
+        },
+      } else {}
+    ) + (
+      if (v.kind == 'StatefulSet' &&
+        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-rule') &&
+        std.objectHas(cr.spec.thanos.rule, 'containers')) then {
+        template+: {
+          spec+: {
+            containers: override_containers(super.containers, cr.spec.thanos.rule.containers)
+          },
+        },
+      } else {}
+    ) + (
+      if (v.kind == 'StatefulSet' &&
+        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-compact') &&
+        std.objectHas(cr.spec.thanos.compact, 'containers')) then {
+        template+: {
+          spec+: {
+            containers: override_containers(super.containers, cr.spec.thanos.compact.containers)
           },
         },
       } else {}

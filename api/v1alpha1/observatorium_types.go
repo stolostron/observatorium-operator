@@ -158,6 +158,10 @@ type ReceiversSpec struct {
 	// Annotations is an unstructured key value map stored with a service account
 	// +optional
 	ServiceAccountAnnotations map[string]string `json:"serviceAccountAnnotations,omitempty"`
+	// The container object, provides a way to override parameters of existing containers.
+	// Currently only the `args` value are overwritten.
+	// +optional
+	Containers []v1.Container `json:"containers,omitempty"`
 }
 
 type StoreSpec struct {
@@ -175,6 +179,10 @@ type StoreSpec struct {
 	// Annotations is an unstructured key value map stored with a service account
 	// +optional
 	ServiceAccountAnnotations map[string]string `json:"serviceAccountAnnotations,omitempty"`
+	// The container object, provides a way to override parameters of existing containers.
+	// Currently only the `args` value are overwritten.
+	// +optional
+	Containers []v1.Container `json:"containers,omitempty"`
 }
 
 // MemCacheSpec describes configuration for Store Memcached
@@ -365,6 +373,10 @@ type QuerySpec struct {
 	// Annotations is an unstructured key value map stored with a service account
 	// +optional
 	ServiceAccountAnnotations map[string]string `json:"serviceAccountAnnotations,omitempty"`
+	// The container object, provides a way to override parameters of existing containers.
+	// Currently only the `args` value are overwritten.
+	// +optional
+	Containers []v1.Container `json:"containers,omitempty"`
 }
 
 type RuleConfig struct {
@@ -443,6 +455,10 @@ type RuleSpec struct {
 	// Annotations is an unstructured key value map stored with a service account
 	// +optional
 	ServiceAccountAnnotations map[string]string `json:"serviceAccountAnnotations,omitempty"`
+	// The container object, provides a way to override parameters of existing containers.
+	// Currently only the `args` value are overwritten.
+	// +optional
+	Containers []v1.Container `json:"containers,omitempty"`
 }
 
 type CompactSpec struct {
@@ -469,6 +485,10 @@ type CompactSpec struct {
 	DeleteDelay string `json:"deleteDelay,omitempty"`
 	// Annotations is an unstructured key value map stored with a service account
 	ServiceAccountAnnotations map[string]string `json:"serviceAccountAnnotations,omitempty"`
+	// The container object, provides a way to override parameters of existing containers.
+	// Currently only the `args` value are overwritten.
+	// +optional
+	Containers []v1.Container `json:"containers,omitempty"`
 }
 
 type VolumeClaimTemplate struct {
@@ -486,6 +506,10 @@ type QueryFrontendSpec struct {
 	ServiceMonitor bool `json:"serviceMonitor,omitempty"`
 	// Memcached spec for QueryFrontend
 	Cache MemCacheSpec `json:"cache,omitempty"`
+	// The container object, provides a way to override parameters of existing containers.
+	// Currently only the `args` value are overwritten.
+	// +optional
+	Containers []v1.Container `json:"containers,omitempty"`
 }
 
 type Hashring struct {
