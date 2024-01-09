@@ -445,19 +445,9 @@ local operatorObs = obs {
         },
       } else {}
     ) + (
-      if (v.kind == 'StatefulSet' &&
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-memcached') &&
-        std.objectHas(cr.spec.thanos.store.cache, 'containers')) then {
-        template+: {
-          spec+: {
-            containers: override_containers(super.containers, cr.spec.thanos.store.containers)
-          },
-        },
-      } else {}
-    ) + (
-      // Will this also apply to QFE??
       if (v.kind == 'Deployment' &&
         std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-query') &&
+        !std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-query-frontend') &&
         std.objectHas(cr.spec.thanos.query, 'containers')) then {
         template+: {
           spec+: {
