@@ -5,13 +5,13 @@ local api = (import 'lib/observatorium-api.libsonnet');
 local obs = (import 'stolo-configuration/components/observatorium.libsonnet');
 
 local override_containers(org_containers, custom_containers) =
-[
-  if (c.name == custom_container.name) then c {
-    args: custom_container.args
-  } else c
-  for custom_container in custom_containers
-  for c in org_containers
-];
+  [
+    if (c.name == custom_container.name) then c {
+      args: custom_container.args,
+    } else c
+    for custom_container in custom_containers
+    for c in org_containers
+  ];
 
 local operatorObs = obs {
 
@@ -56,7 +56,7 @@ local operatorObs = obs {
       securityContext: if std.objectHas(cr.spec, 'securityContext') then cr.spec.securityContext else obs.thanos.stores.config.securityContext,
       ignoreDeletionMarksDelay: std.ceil(std.parseInt(std.substr(deleteDelay, 0, std.length(deleteDelay) - 1)) / 2) + std.substr(deleteDelay, std.length(deleteDelay) - 1, std.length(deleteDelay)),
       local maxItemSize = if std.objectHas(cr.spec.thanos, 'store') && std.objectHas(cr.spec.thanos.store, 'cache') && std.objectHas(cr.spec.thanos.store.cache, 'maxItemSize') then cr.spec.thanos.store.cache.maxItemSize else obs.thanos.stores.config.maxItemSize,
-      maxItemSize: std.strReplace(std.strReplace(maxItemSize, "m", "MiB"), "g", "GiB"),
+      maxItemSize: std.strReplace(std.strReplace(maxItemSize, 'm', 'MiB'), 'g', 'GiB'),
     } + if std.objectHas(cr.spec.thanos, 'store') then cr.spec.thanos.store else {},
 
     storeCache+:: (if std.objectHas(cr.spec.thanos, 'store') && std.objectHas(cr.spec.thanos.store, 'cache') then cr.spec.thanos.store.cache else {}) + {
@@ -80,7 +80,7 @@ local operatorObs = obs {
     queryFrontend+:: {
       securityContext: if std.objectHas(cr.spec, 'securityContext') then cr.spec.securityContext else obs.thanos.queryFrontend.config.securityContext,
       local maxItemSize = if std.objectHas(cr.spec.thanos, 'queryFrontend') && std.objectHas(cr.spec.thanos.queryFrontend, 'cache') && std.objectHas(cr.spec.thanos.queryFrontend.cache, 'maxItemSize') then cr.spec.thanos.queryFrontend.cache.maxItemSize else obs.thanos.queryFrontend.config.maxItemSize,
-      maxItemSize: std.strReplace(std.strReplace(maxItemSize, "m", "MiB"), "g", "GiB"),
+      maxItemSize: std.strReplace(std.strReplace(maxItemSize, 'm', 'MiB'), 'g', 'GiB'),
     } + if std.objectHas(cr.spec.thanos, 'queryFrontend') then cr.spec.thanos.queryFrontend else {},
 
     queryFrontendCache+:: (if std.objectHas(cr.spec.thanos, 'queryFrontend') && std.objectHas(cr.spec.thanos.queryFrontend, 'cache') then cr.spec.thanos.queryFrontend.cache else {}) + {
@@ -174,8 +174,8 @@ local operatorObs = obs {
           for labelName in std.objectFields(labels)
           if !std.setMember(labelName, ['store.thanos.io/shard'])
         } + {
-          'store.observatorium.io/shard':labels['store.thanos.io/shard'],
-        }
+          'store.observatorium.io/shard': labels['store.thanos.io/shard'],
+        },
       } else {}
     ) + (
       if (v.kind == 'StatefulSet' && std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-query-frontend-memcached')) then {
@@ -275,11 +275,11 @@ local operatorObs = obs {
       if (v.kind == 'Service' && std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-shard')) then {
         local selector = v.spec.selector,
         selector: {
-            [labelName]: selector[labelName]
-            for labelName in std.objectFields(selector)
-            if !std.setMember(labelName, ['store.thanos.io/shard'])
-          } + {
-            'store.observatorium.io/shard': selector['store.thanos.io/shard'],
+          [labelName]: selector[labelName]
+          for labelName in std.objectFields(selector)
+          if !std.setMember(labelName, ['store.thanos.io/shard'])
+        } + {
+          'store.observatorium.io/shard': selector['store.thanos.io/shard'],
         },
       } else {}
     ) + (
@@ -308,7 +308,7 @@ local operatorObs = obs {
         },
         volumeClaimTemplates: [
           vct {
-            metadata+:{
+            metadata+: {
               labels: {
                 [labelName]: matchLabels[labelName]
                 for labelName in std.objectFields(matchLabels)
@@ -316,17 +316,18 @@ local operatorObs = obs {
               } + {
                 'store.observatorium.io/shard': matchLabels['store.thanos.io/shard'],
               },
-            }
+            },
           }
           for vct in v.spec.volumeClaimTemplates
-        ]
+        ],
       } else {}
     ) + (
       if (std.objectHas(cr.spec, 'envVars') && (v.kind == 'StatefulSet' && (
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-compact') || 
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-receive') || 
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-rule') || 
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-shard')))) then {
+                                                  std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-compact') ||
+                                                  std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-receive') ||
+                                                  std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-rule') ||
+                                                  std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-shard')
+                                                ))) then {
         template+: {
           spec+: {
             containers: [
@@ -335,7 +336,7 @@ local operatorObs = obs {
                   [
                     { name: envName, value: cr.spec.envVars[envName] }
                     for envName in std.objectFields(cr.spec.envVars)
-                  ]
+                  ],
               } else c
               for c in super.containers
             ],
@@ -374,7 +375,7 @@ local operatorObs = obs {
     ) + (
       if (std.objectHas(cr.spec, 'pullSecret') && (v.kind == 'StatefulSet' || v.kind == 'Deployment')) then {
         template+: {
-          spec+:{
+          spec+: {
             imagePullSecrets: [
               {
                 name: cr.spec.pullSecret,
@@ -384,13 +385,14 @@ local operatorObs = obs {
         },
       } else {}
     ) + (
-      if (std.objectHas(cr.spec.objectStorageConfig.thanos, 'serviceAccountProjection') && 
-        cr.spec.objectStorageConfig.thanos.serviceAccountProjection == true) && 
-        (v.kind == 'StatefulSet' && (
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-compact') || 
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-receive') || 
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-rule') || 
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-shard'))) then {
+      if (std.objectHas(cr.spec.objectStorageConfig.thanos, 'serviceAccountProjection') &&
+          cr.spec.objectStorageConfig.thanos.serviceAccountProjection == true) &&
+         (v.kind == 'StatefulSet' && (
+            std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-compact') ||
+            std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-receive') ||
+            std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-rule') ||
+            std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-shard')
+          )) then {
         template+: {
           spec+: {
             containers: [
@@ -401,8 +403,8 @@ local operatorObs = obs {
                       name: 'bound-sa-token',
                       mountPath: '/var/run/secrets/openshift/serviceaccount',
                       readOnly: true,
-                    }
-                  ]
+                    },
+                  ],
               } else c
               for c in super.containers
             ],
@@ -426,62 +428,78 @@ local operatorObs = obs {
       } else {}
     ) + (
       if (v.kind == 'StatefulSet' &&
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-receive') &&
-        std.objectHas(cr.spec.thanos.receivers, 'containers')) then {
+          std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-receive') &&
+          std.objectHas(cr.spec.thanos.receivers, 'containers')) then {
         template+: {
           spec+: {
-            containers: override_containers(super.containers, cr.spec.thanos.receivers.containers)
+            containers: override_containers(super.containers, cr.spec.thanos.receivers.containers),
           },
         },
       } else {}
     ) + (
       if (v.kind == 'StatefulSet' &&
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-shard') &&
-        std.objectHas(cr.spec.thanos.store, 'containers')) then {
+          std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-shard') &&
+          std.objectHas(cr.spec.thanos.store, 'containers')) then {
         template+: {
           spec+: {
-            containers: override_containers(super.containers, cr.spec.thanos.store.containers)
+            containers: override_containers(super.containers, cr.spec.thanos.store.containers),
           },
         },
       } else {}
     ) + (
       if (v.kind == 'Deployment' &&
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-query') &&
-        !std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-query-frontend') &&
-        std.objectHas(cr.spec.thanos.query, 'containers')) then {
+          std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-query') &&
+          !std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-query-frontend') &&
+          std.objectHas(cr.spec.thanos.query, 'containers')) then {
         template+: {
           spec+: {
-            containers: override_containers(super.containers, cr.spec.thanos.query.containers)
+            containers: override_containers(super.containers, cr.spec.thanos.query.containers),
           },
         },
       } else {}
     ) + (
       if (v.kind == 'Deployment' &&
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-query-frontend') &&
-        std.objectHas(cr.spec.thanos.queryFrontend, 'containers')) then {
+          std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-query-frontend') &&
+          std.objectHas(cr.spec.thanos.queryFrontend, 'containers')) then {
         template+: {
           spec+: {
-            containers: override_containers(super.containers, cr.spec.thanos.queryFrontend.containers)
+            containers: override_containers(super.containers, cr.spec.thanos.queryFrontend.containers),
+          },
+        },
+      } else {}
+    ) + (
+      if (v.kind == 'Deployment' &&
+          std.startsWith(v.metadata.name, cr.metadata.name + '-observatorium-api')) then {
+        template+: {
+          spec+: {
+            containers: [
+              if x.name == 'observatorium-api'
+              then x {
+                args+: ['--metrics.write-timeout=5m', '--server.read-header-timeout=10s'],
+              }
+              else x
+              for x in super.containers
+            ],
           },
         },
       } else {}
     ) + (
       if (v.kind == 'StatefulSet' &&
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-rule') &&
-        std.objectHas(cr.spec.thanos.rule, 'containers')) then {
+          std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-rule') &&
+          std.objectHas(cr.spec.thanos.rule, 'containers')) then {
         template+: {
           spec+: {
-            containers: override_containers(super.containers, cr.spec.thanos.rule.containers)
+            containers: override_containers(super.containers, cr.spec.thanos.rule.containers),
           },
         },
       } else {}
     ) + (
       if (v.kind == 'StatefulSet' &&
-        std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-compact') &&
-        std.objectHas(cr.spec.thanos.compact, 'containers')) then {
+          std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-compact') &&
+          std.objectHas(cr.spec.thanos.compact, 'containers')) then {
         template+: {
           spec+: {
-            containers: override_containers(super.containers, cr.spec.thanos.compact.containers)
+            containers: override_containers(super.containers, cr.spec.thanos.compact.containers),
           },
         },
       } else {}
