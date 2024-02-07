@@ -68,7 +68,7 @@ spec:
             "max_get_multi_batch_size": 1000
             "max_get_multi_concurrency": 900
             "max_idle_connections": 1000
-            "max_item_size": "1MiB"
+            "max_item_size": "10MiB"
             "timeout": "2s"
           "type": "memcached"
         - |-
@@ -85,7 +85,7 @@ spec:
             "max_get_multi_batch_size": 1000
             "max_get_multi_concurrency": 900
             "max_idle_connections": 1000
-            "max_item_size": "1MiB"
+            "max_item_size": "10MiB"
             "timeout": "2s"
           "max_chunks_get_range_requests": 3
           "metafile_content_ttl": "24h"

@@ -1,4 +1,5 @@
 local thanos = (import './thanos.libsonnet');
+local thanosOverwrites = (import './thanos-overwrites.libsonnet');
 local loki = (import './loki.libsonnet');
 local tracing = (import './tracing.libsonnet');
 local api = (import 'observatorium-api/observatorium-api.libsonnet');
@@ -27,7 +28,7 @@ local api = (import 'observatorium-api/observatorium-api.libsonnet');
     stores+: {
       shards: 1,
     },
-  }),
+  }) + thanosOverwrites,
 
   gubernator:: (import 'gubernator.libsonnet')({
     local cfg = self,
