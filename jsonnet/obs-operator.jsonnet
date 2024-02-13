@@ -471,6 +471,11 @@ local operatorObs = obs {
       if (v.kind == 'Deployment' &&
           std.startsWith(v.metadata.name, cr.metadata.name + '-observatorium-api')) then {
         template+: {
+          metadata+: {
+            labels+: {
+              'cr-hash': std.toString(std.md5(std.toString(cr.spec))),
+            },
+          },
           spec+: {
             containers: [
               if x.name == 'observatorium-api'
