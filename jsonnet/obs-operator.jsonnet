@@ -473,7 +473,7 @@ local operatorObs = obs {
         template+: {
           metadata+: {
             labels+: {
-              'cr-hash': std.toString(std.md5(std.toString(cr.spec))),
+              'cr-hash': std.toString(std.md5(std.toString(cr))),
             },
           },
           spec+: {
