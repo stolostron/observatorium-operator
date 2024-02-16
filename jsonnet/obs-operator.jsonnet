@@ -508,6 +508,25 @@ local operatorObs = obs {
           },
         },
       } else {}
+    ) + (
+      if (
+        v.kind == 'StatefulSet' ||
+        v.kind == 'Deployment'
+        ) then {
+        template+: {
+          spec+: {
+            containers: [
+            c {
+              securityContext+: {
+                readOnlyRootFilesystem: true,
+                privileged: false
+              }
+            }
+            for c in super.containers
+            ],
+          },
+        },
+      } else {}
     ),
   }, operatorObs.manifests),
 }
