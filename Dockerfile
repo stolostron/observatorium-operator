@@ -10,8 +10,9 @@ ARG LOCUTUS_GIT_REPO
 ARG LOCUTUS_GIT_REF
 
 # Build
+ADD "$LOCUTUS_GIT_REPO/archive/$LOCUTUS_GIT_REF.tar.gz" /workspace/operator/locutus.tar.gz
 WORKDIR /workspace/operator/locutus
-ADD --keep-git-dir=true "$LOCUTUS_GIT_REPO#$LOCUTUS_GIT_REF" .
+RUN tar -xf /workspace/operator/locutus.tar.gz -C . --strip-components=1
 RUN GO111MODULE="on" CGO_ENABLED=1 go build
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
