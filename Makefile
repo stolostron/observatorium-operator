@@ -6,7 +6,7 @@ BUILD_DATE := $(shell date -u +"%Y-%m-%d")
 BUILD_TIMESTAMP := $(shell date -u +"%Y-%m-%dT%H:%M:%S%Z")
 VCS_BRANCH := $(strip $(shell git rev-parse --abbrev-ref HEAD))
 VCS_REF := $(strip $(shell [ -d .git ] && git rev-parse --short HEAD))
-DOCKER_REPO ?= quay.io/douglascamata/observatorium-operator
+DOCKER_REPO ?= quay.io/observatorium/observatorium-operator
 
 LOCUTUS_GIT_REPO :=  https://github.com/stolostron/locutus.git
 LOCUTUS_GIT_TAG :=  release-2.8
