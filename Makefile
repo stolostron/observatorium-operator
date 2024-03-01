@@ -8,9 +8,6 @@ VCS_BRANCH := $(strip $(shell git rev-parse --abbrev-ref HEAD))
 VCS_REF := $(strip $(shell [ -d .git ] && git rev-parse --short HEAD))
 DOCKER_REPO ?= quay.io/observatorium/observatorium-operator
 
-LOCUTUS_GIT_REPO :=  https://github.com/stolostron/locutus
-LOCUTUS_GIT_TAG :=  release-2.8
-
 BIN_DIR ?= $(shell pwd)/tmp/bin
 CONTROLLER_GEN ?= $(BIN_DIR)/controller-gen
 
@@ -44,9 +41,6 @@ container-build:
 		--build-arg VCS_REF="$(VCS_REF)" \
 		--build-arg VCS_BRANCH="$(VCS_BRANCH)" \
 		--build-arg DOCKERFILE_PATH="/Dockerfile" \
-		--build-arg LOCUTUS_GIT_REPO="$(LOCUTUS_GIT_REPO)" \
-		--build-arg LOCUTUS_GIT_TAG="$(LOCUTUS_GIT_TAG)" \
-		--build-arg LOCUTUS_GIT_REF="$(shell git ls-remote $(LOCUTUS_GIT_REPO) $(LOCUTUS_GIT_TAG) | cut -f1)" \
 		-t $(DOCKER_REPO):$(VCS_BRANCH)-$(BUILD_DATE)-$(VERSION) .
 
 # Push the image

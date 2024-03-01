@@ -10,7 +10,7 @@ ARG LOCUTUS_GIT_REPO
 ARG LOCUTUS_GIT_REF
 
 # Build
-ADD "$LOCUTUS_GIT_REPO/archive/$LOCUTUS_GIT_REF.tar.gz" /workspace/operator/locutus.tar.gz
+ADD https://github.com/stolostron/locutus/archive/935e4a75faa0bc840b9ef836a56789c3bb9eba2a.tar.gz /workspace/operator/locutus.tar.gz
 WORKDIR /workspace/operator/locutus
 RUN tar -xf /workspace/operator/locutus.tar.gz -C . --strip-components=1
 RUN GO111MODULE="on" CGO_ENABLED=1 go build
