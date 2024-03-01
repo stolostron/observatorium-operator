@@ -6,10 +6,13 @@ WORKDIR /workspace
 COPY . operator/
 COPY ./jsonnet/vendor/stolo-configuration/components/ components/
 
+ARG LOCUTUS_GIT_REPO
+ARG LOCUTUS_GIT_REF
+
 # Build
-WORKDIR /workspace/operator
-RUN git clone https://github.com/stolostron/locutus --branch release-2.8
-RUN cd locutus; GO111MODULE="on" CGO_ENABLED=1 go build
+WORKDIR /workspace/operator/locutus
+ADD --keep-git-dir=true "$LOCUTUS_GIT_REPO#$LOCUTUS_GIT_REF" .
+RUN GO111MODULE="on" CGO_ENABLED=1 go build
 
 FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
@@ -27,6 +30,9 @@ ARG VERSION
 ARG VCS_REF
 ARG DOCKERFILE_PATH
 ARG VCS_BRANCH
+ARG LOCUTUS_GIT_REPO
+ARG LOCUTUS_GIT_REF
+ARG LOCUTUS_GIT_TAG
 
 LABEL vendor="Observatorium" \
     name="observatorium/operator" \
@@ -44,6 +50,8 @@ LABEL vendor="Observatorium" \
     org.label-schema.vcs-branch=$VCS_BRANCH \
     org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/observatorium/operator" \
+    org.label-schema.locutus.vcs-ref=$LOCUTUS_GIT_REF \
+    org.label-schema.locutus.vcs-branch=$LOCUTUS_GIT_TAG \
     org.label-schema.vendor="observatorium/operator" \
     org.label-schema.version=$VERSION
 
