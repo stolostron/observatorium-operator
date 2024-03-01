@@ -10,7 +10,6 @@ DOCKER_REPO ?= quay.io/observatorium/observatorium-operator
 
 LOCUTUS_GIT_REPO :=  https://github.com/stolostron/locutus.git
 LOCUTUS_GIT_TAG :=  release-2.8
-LOCUTUS_GIT_REF :=
 
 BIN_DIR ?= $(shell pwd)/tmp/bin
 CONTROLLER_GEN ?= $(BIN_DIR)/controller-gen
