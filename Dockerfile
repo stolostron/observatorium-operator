@@ -6,9 +6,6 @@ WORKDIR /workspace
 COPY . operator/
 COPY ./jsonnet/vendor/stolo-configuration/components/ components/
 
-ARG LOCUTUS_GIT_REPO
-ARG LOCUTUS_GIT_REF
-
 # Build
 ADD https://github.com/stolostron/locutus/archive/935e4a75faa0bc840b9ef836a56789c3bb9eba2a.tar.gz /workspace/operator/locutus.tar.gz
 WORKDIR /workspace/operator/locutus
@@ -31,9 +28,6 @@ ARG VERSION
 ARG VCS_REF
 ARG DOCKERFILE_PATH
 ARG VCS_BRANCH
-ARG LOCUTUS_GIT_REPO
-ARG LOCUTUS_GIT_REF
-ARG LOCUTUS_GIT_TAG
 
 LABEL vendor="Observatorium" \
     name="observatorium/operator" \
@@ -51,8 +45,6 @@ LABEL vendor="Observatorium" \
     org.label-schema.vcs-branch=$VCS_BRANCH \
     org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/observatorium/operator" \
-    org.label-schema.locutus.vcs-ref=$LOCUTUS_GIT_REF \
-    org.label-schema.locutus.vcs-branch=$LOCUTUS_GIT_TAG \
     org.label-schema.vendor="observatorium/operator" \
     org.label-schema.version=$VERSION
 
