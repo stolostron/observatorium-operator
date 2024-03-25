@@ -17,7 +17,7 @@
           "subdir": "configuration"
         }
       },
-      "version": "main",
+      "version": "release-2.9",
       "name": "stolo-configuration"
     },
     {

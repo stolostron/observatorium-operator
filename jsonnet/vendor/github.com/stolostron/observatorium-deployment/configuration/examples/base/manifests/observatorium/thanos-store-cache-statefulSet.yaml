@@ -30,8 +30,8 @@ spec:
       containers:
       - args:
         - -m 1024
-        - -I 1m
-        - -c 1024
+        - -I 10m
+        - -c 10240
         - -v
         image: docker.io/memcached:1.6.3-alpine
         imagePullPolicy: IfNotPresent

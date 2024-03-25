@@ -1,5 +1,6 @@
 local t = (import 'kube-thanos/thanos.libsonnet');
 local rc = (import 'thanos-receive-controller/thanos-receive-controller.libsonnet');
+local overwrites = (import './thanos-overwrites.libsonnet');
 local memcached = (import 'memcached.libsonnet');
 
 // These are the defaults for this components configuration.
@@ -21,6 +22,7 @@ local defaults = {
     tenants: [],
   }],
   stores+: {
+    maxItemSize: '10MiB',
     shards: 1,
     volumeClaimTemplate: {
       spec: {
@@ -127,6 +129,7 @@ local defaults = {
 
   queryFrontend: {
     replicas: 1,
+    maxItemSize: '10MiB',
   },
 
   queryFrontendCache: defaults.memcached {
@@ -232,7 +235,6 @@ function(params) {
     objectStorageConfig: thanos.config.objectStorageConfig,
     replicas: 1,
     logLevel: 'info',
-    maxItemSize: '1MiB',
     local memcachedDefaults = {
       timeout: '2s',
       max_idle_connections: 1000,
@@ -294,7 +296,6 @@ function(params) {
     splitInterval: '24h',
     maxRetries: 0,
     logQueriesLongerThan: '5s',
-    maxItemSize: '1MiB',
     queryRangeCache: {
       type: 'memcached',
       config+: {
@@ -363,4 +364,4 @@ function(params) {
     for name in std.objectFields(thanos.receiveController)
     if thanos.receiveController[name] != null
   },
-}
+} + overwrites

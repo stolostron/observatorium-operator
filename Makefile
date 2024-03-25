@@ -58,6 +58,9 @@ jsonnet-update: $(JB)
 jsonnet-update-deployments: $(JB)
 	cd jsonnet; $(JB) update github.com/observatorium/deployments
 
+jsonnet-update-observatorium: $(JB)
+	cd jsonnet; $(JB) update github.com/stolostron/observatorium-deployment/configuration
+
 JSONNET_SRC = $(shell find . -type f -not -path './*vendor/*' \( -name '*.libsonnet' -o -name '*.jsonnet' \))
 JSONNETFMT_CMD := $(JSONNETFMT) -n 2 --max-blank-lines 2 --string-style s --comment-style s
 

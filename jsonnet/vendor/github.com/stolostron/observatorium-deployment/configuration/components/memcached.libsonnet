@@ -31,9 +31,9 @@ local defaults = {
   resources: {},
   serviceMonitor: false,
 
-  maxItemSize: '1m',
-  memoryLimitMb: 1024,
-  connectionLimit: 1024,
+  maxItemSize: '10m',
+  memoryLimitMb: 10240,
+  connectionLimit: 10240,
 
   cpuRequest:: '500m',
   cpuLimit:: '3',
