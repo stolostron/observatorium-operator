@@ -22,4 +22,23 @@
         },
       }, super.hashrings),
   },
+  query+:: {
+    deployment+: {
+      spec+: {
+        template+: {
+          spec+: {
+            containers: [
+              if c.name == 'thanos-query' then c {
+                args+: [
+                  '--query.promql-engine=thanos',
+                ],
+              }
+              else c
+              for c in super.containers
+            ],
+          },
+        },
+      },
+    },
+  },
 }
