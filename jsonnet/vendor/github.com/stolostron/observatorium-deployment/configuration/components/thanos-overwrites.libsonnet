@@ -11,6 +11,9 @@
                   if c.name == 'thanos-receive' then c {
                     args+: [
                       '--tsdb.too-far-in-future.time-window=5m',
+                      '--downsample.concurrency=4',
+                      '--compact.concurrency=4',
+                      '--debug.max-compaction-level=3',
                     ],
                   }
                   else c
