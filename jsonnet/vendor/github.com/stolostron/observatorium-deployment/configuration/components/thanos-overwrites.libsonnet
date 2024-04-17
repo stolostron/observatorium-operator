@@ -11,9 +11,6 @@
                   if c.name == 'thanos-receive' then c {
                     args+: [
                       '--tsdb.too-far-in-future.time-window=5m',
-                      '--downsample.concurrency=4',
-                      '--compact.concurrency=4',
-                      '--debug.max-compaction-level=3',
                     ],
                   }
                   else c
@@ -24,6 +21,27 @@
           },
         },
       }, super.hashrings),
+  },
+  compact+:: {
+    statefulSet+: {
+      spec+: {
+        template+: {
+          spec+: {
+            containers: [
+              if c.name == 'thanos-compact' then c {
+                args+: [
+                  '--downsample.concurrency=4',
+                  '--compact.concurrency=4',
+                  '--debug.max-compaction-level=3',
+                ],
+              }
+              else c
+              for c in super.containers
+            ],
+          },
+        },
+      },
+    },
   },
   query+:: {
     deployment+: {

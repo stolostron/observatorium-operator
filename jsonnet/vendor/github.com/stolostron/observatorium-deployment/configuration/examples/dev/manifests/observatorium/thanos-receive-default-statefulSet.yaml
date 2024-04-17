@@ -81,9 +81,6 @@ spec:
         - --receive.local-endpoint=$(NAME).observatorium-xyz-thanos-receive-default.$(NAMESPACE).svc.cluster.local:10901
         - --receive.hashrings-file=/var/lib/thanos-receive/hashrings.json
         - --tsdb.too-far-in-future.time-window=5m
-        - --downsample.concurrency=4
-        - --compact.concurrency=4
-        - --debug.max-compaction-level=3
         env:
         - name: NAME
           valueFrom:

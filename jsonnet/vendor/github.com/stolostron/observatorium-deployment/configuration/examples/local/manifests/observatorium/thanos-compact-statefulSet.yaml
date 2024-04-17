@@ -62,6 +62,9 @@ spec:
         - --downsample.concurrency=1
         - --downsampling.disable
         - --deduplication.replica-label=replica
+        - --downsample.concurrency=4
+        - --compact.concurrency=4
+        - --debug.max-compaction-level=3
         env:
         - name: OBJSTORE_CONFIG
           valueFrom:
