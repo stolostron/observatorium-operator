@@ -30,8 +30,6 @@
             containers: [
               if c.name == 'thanos-compact' then c {
                 args+: [
-                  '--downsample.concurrency=4',
-                  '--compact.concurrency=4',
                   '--debug.max-compaction-level=3',
                 ],
               }

@@ -58,12 +58,10 @@ spec:
         - --retention.resolution-5m=1s
         - --retention.resolution-1h=1s
         - --delete-delay=48h
-        - --compact.concurrency=1
-        - --downsample.concurrency=1
+        - --compact.concurrency=4
+        - --downsample.concurrency=4
         - --downsampling.disable
         - --deduplication.replica-label=replica
-        - --downsample.concurrency=4
-        - --compact.concurrency=4
         - --debug.max-compaction-level=3
         env:
         - name: OBJSTORE_CONFIG

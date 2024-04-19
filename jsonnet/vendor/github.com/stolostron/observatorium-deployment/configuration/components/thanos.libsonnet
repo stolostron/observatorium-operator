@@ -75,6 +75,8 @@ local defaults = {
       },
     },
     disableDownsampling: true,
+    downsampleConcurrency: 4,
+    compactConcurrency: 4,
     deleteDelay: '48h',
     retentionResolutionRaw: '14d',
     retentionResolution5m: '1s',
