@@ -2508,6 +2508,9 @@ spec:
                       serviceMonitor:
                         description: ServiceMonitor enables servicemonitor.
                         type: boolean
+                      usePrometheusEngine:
+                        description: Default to old Prometheus engine instead of Thanos PromQL engine.
+                        type: boolean
                     type: object
                   queryFrontend:
                     description: Thanos QueryFrontend
