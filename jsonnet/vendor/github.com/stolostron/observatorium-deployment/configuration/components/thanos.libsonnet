@@ -127,6 +127,7 @@ local defaults = {
   query: {
     replicas: 1,
     queryTimeout: '15m',
+    useThanosEngine: true,
   },
 
   queryFrontend: {

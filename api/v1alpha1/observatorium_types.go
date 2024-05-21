@@ -373,6 +373,9 @@ type QuerySpec struct {
 	// Annotations is an unstructured key value map stored with a service account
 	// +optional
 	ServiceAccountAnnotations map[string]string `json:"serviceAccountAnnotations,omitempty"`
+	// Default to old Prometheus engine instead of Thanos PromQL engine.
+	// +optional
+	UsePrometheusEngine bool `json:"usePrometheusEngine,omitempty"`
 	// The container object, provides a way to override parameters of existing containers.
 	// Currently only the `args` value are overwritten.
 	// +optional

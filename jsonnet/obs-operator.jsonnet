@@ -75,6 +75,8 @@ local operatorObs = obs {
 
     query+:: {
       securityContext: if std.objectHas(cr.spec, 'securityContext') then cr.spec.securityContext else obs.thanos.query.config.securityContext,
+      // Flip the bool in CR as we want to use Thanos engine by default
+      useThanosEngine: if std.objectHas(cr.spec.thanos.query, 'usePrometheusEngine') && cr.spec.thanos.query.usePrometheusEngine == true then false else true,
     } + if std.objectHas(cr.spec.thanos, 'query') then cr.spec.thanos.query else {},
 
     queryFrontend+:: {
