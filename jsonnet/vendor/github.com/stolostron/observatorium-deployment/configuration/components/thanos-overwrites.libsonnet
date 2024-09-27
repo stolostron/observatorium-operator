@@ -52,7 +52,7 @@
                 containers: [
                   if c.name == 'thanos-store' then c {
                     args+: [
-                      '--block-discovery-strategy="recursive"',
+                      '--block-discovery-strategy=recursive',
                     ],
                   } else c
                   for c in super.containers

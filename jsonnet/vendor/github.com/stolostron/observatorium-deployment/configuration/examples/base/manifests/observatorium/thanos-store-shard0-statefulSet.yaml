@@ -102,7 +102,7 @@ spec:
             - action: keep
               source_labels: ["shard"]
               regex: 0
-        - --block-discovery-strategy="recursive"
+        - --block-discovery-strategy=recursive
         env:
         - name: OBJSTORE_CONFIG
           valueFrom:
