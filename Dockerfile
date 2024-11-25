@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM golang:1.13.3-alpine3.10 as builder
+FROM golang:1.13.11-alpine3.10 as builder
 
 RUN apk add --update --no-cache git bash
 WORKDIR /workspace
