@@ -318,6 +318,8 @@ type TLS struct {
 	ServerName string `json:"serverName,omitempty"`
 	// +optional
 	ReloadInterval string `json:"reloadInterval,omitempty"`
+	// +optional
+	CipherSuite string `json:"cipherSuite,omitempty"`
 }
 
 // EndpointsConfig contains the configuration for all endpoints
