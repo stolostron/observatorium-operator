@@ -10,7 +10,7 @@ COPY ./jsonnet/vendor/github.com/observatorium/deployments/environments/base/def
 # Build
 RUN GO111MODULE="on" go build github.com/brancz/locutus
 
-FROM alpine:3.10 as runner
+FROM alpine:3.21 as runner
 WORKDIR /
 COPY --from=builder /workspace/locutus /
 COPY --from=builder /workspace/operator/jsonnet /environments/operator
