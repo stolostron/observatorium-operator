@@ -33,6 +33,7 @@ ARG VCS_BRANCH
 
 LABEL vendor="Observatorium" \
     name="observatorium/operator" \
+    com.redhat.component="observatorium" \
     description="Observatorium Operator" \
     io.k8s.display-name="observatorium/operator" \
     io.k8s.description="Observatorium Operator" \
