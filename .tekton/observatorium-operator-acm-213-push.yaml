@@ -33,7 +33,7 @@ spec:
   - name: hermetic
     value: true
   - name: prefetch-input
-    value: '[{"path": ".", "type": "gomod"}]'
+    value: '[{"path": ".", "type": "gomod"}, {"path": "locutus/", "type": "gomod"}]'
   - name: build-source-image
     value: "true"
   pipelineSpec:
