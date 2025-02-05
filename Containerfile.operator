@@ -29,8 +29,7 @@ ARG VCS_REF
 ARG DOCKERFILE_PATH
 ARG VCS_BRANCH
 
-LABEL vendor="Red Hat, Inc" \
-    name="observatorium/operator" \
+LABEL name="observatorium/operator" \
     summary="observatorium-operator" \
     com.redhat.component="observatorium-operator" \
     description="Observatorium Operator" \
