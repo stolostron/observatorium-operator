@@ -34,6 +34,7 @@ LABEL vendor="Observatorium" \
     summary="observatorium-operator" \
     com.redhat.component="observatorium-operator" \
     description="Observatorium Operator" \
+    io.openshift.tags="observability" \
     io.k8s.display-name="observatorium/operator" \
     io.k8s.description="Observatorium Operator" \
     maintainer="Observatorium <team-monitoring@redhat.com>" \
