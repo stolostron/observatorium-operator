@@ -1,0 +1,3 @@
+[submodule "locutus"]
+	path = locutus
+	url = https://github.com/stolostron/locutus
