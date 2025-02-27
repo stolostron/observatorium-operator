@@ -24,9 +24,12 @@ test_kind_prow() {
     IP="$(cat "$SHARED_DIR/public_ip")"
     HOST="ec2-user@$IP"
     OPT=(-q -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -i "$KEY")
-    
-    scp "${OPT[@]}" -r ../observatorium-operator "$HOST:/tmp/observatorium-operator"
-    ssh "${OPT[@]}" "$HOST" "cd /tmp/observatorium-operator && \
+    # we tar the repo, transfer, then untar as newer version of SCP complaints
+    # when copying folders with symlinks which we have in the vendor dir
+    tar -czf /tmp/observatorium-operator.tar.gz ../observatorium-operator
+    scp "${OPT[@]}" /tmp/observatorium-operator.tar.gz "$HOST:/tmp/"
+    ssh "${OPT[@]}" "$HOST" "tar -xf /tmp/observatorium-operator.tar.gz -C /tmp/ && \
+        cd /tmp/observatorium-operator && \
         export OPERATOR_IMAGE_NAME=${OPERATOR_IMAGE_NAME} && \
         . ./tests/e2e.sh kind && \
         . ./tests/e2e.sh deploy-operator && \
