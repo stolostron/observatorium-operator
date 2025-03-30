@@ -21,7 +21,7 @@ require (
 	github.com/gobuffalo/flect v0.2.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.0 // indirect
-	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/go-jsonnet v0.17.0 // indirect
 	github.com/google/gofuzz v1.1.0 // indirect
 	github.com/googleapis/gnostic v0.4.1 // indirect
@@ -42,15 +42,15 @@ require (
 	github.com/prometheus/client_golang v1.20.5 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.55.0 // indirect
-	github.com/prometheus/procfs v0.15.1 // indirect
+	github.com/prometheus/procfs v0.16.0 // indirect
 	github.com/spf13/cobra v1.1.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/crypto v0.32.0 // indirect
 	golang.org/x/mod v0.17.0 // indirect
 	golang.org/x/net v0.34.0 // indirect
 	golang.org/x/oauth2 v0.21.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
-	golang.org/x/sys v0.29.0 // indirect
+	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/term v0.28.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
