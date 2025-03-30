@@ -1,6 +1,8 @@
 module github.com/stolostron/observatorium-operator
 
-go 1.21
+go 1.22
+
+toolchain go1.22.9
 
 require (
 	github.com/brancz/locutus v0.0.0-20210511124350-7a84f4d1bcb3
@@ -31,7 +33,7 @@ require (
 	github.com/imdario/mergo v0.3.6 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.17.9 // indirect
+	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
