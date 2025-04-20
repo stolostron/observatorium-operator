@@ -14,7 +14,7 @@ require (
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/jsonnet-bundler/jsonnet-bundler v0.4.0
 	github.com/observatorium/observatorium v0.1.1
-	github.com/prometheus/common v0.14.0 // indirect
+	github.com/prometheus/common v0.63.0 // indirect
 	github.com/prometheus/procfs v0.2.0 // indirect
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
 	golang.org/x/net v0.0.0-20200927032502-5d4f70055728 // indirect
