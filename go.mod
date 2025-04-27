@@ -26,5 +26,5 @@ require (
 	k8s.io/klog/v2 v2.3.0 // indirect
 	k8s.io/utils v0.0.0-20200912215256-4140de9c8800 // indirect
 	sigs.k8s.io/controller-runtime v0.5.0
-	sigs.k8s.io/controller-tools v0.2.8
+	sigs.k8s.io/controller-tools v0.17.3
 )
