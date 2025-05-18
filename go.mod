@@ -11,7 +11,7 @@ require (
 	github.com/googleapis/gnostic v0.5.1 // indirect
 	github.com/hashicorp/go-multierror v1.1.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
-	github.com/imdario/mergo v0.3.11 // indirect
+	github.com/imdario/mergo v1.0.2 // indirect
 	github.com/jsonnet-bundler/jsonnet-bundler v0.4.0
 	github.com/observatorium/observatorium v0.1.1
 	github.com/prometheus/common v0.14.0 // indirect
