@@ -25,6 +25,7 @@ local defaults = {
   tls: {},
   rateLimiter: {},
   internal: {},
+  securityContext: {},
 
   commonLabels:: {
     'app.kubernetes.io/name': 'observatorium-api',
@@ -107,6 +108,7 @@ function(params) {
               name: 'observatorium-api',
               image: api.config.image,
               imagePullPolicy: api.config.imagePullPolicy,
+              securityContext: api.config.securityContext,
               args: [
                 '--web.listen=0.0.0.0:%s' % api.config.ports.public,
                 '--web.internal.listen=0.0.0.0:%s' % api.config.ports.internal,
@@ -147,6 +149,12 @@ function(params) {
                     if std.objectHas(api.config.tls, 'serverName') then
                       [
                         '--tls.healthchecks.server-name=' + api.config.tls.serverName,
+                      ]
+                    else []
+                  ) + (
+                    if std.objectHas(api.config.tls, 'cipherSuites') then
+                      [
+                        '--tls.cipher-suites=' + api.config.tls.cipherSuites,
                       ]
                     else []
                   )
