@@ -2,7 +2,7 @@ module github.com/stolostron/observatorium-operator
 
 go 1.23.0
 
-toolchain go1.23.7
+toolchain go1.24.4
 
 require (
 	github.com/brancz/locutus v0.0.0-20210511124350-7a84f4d1bcb3
