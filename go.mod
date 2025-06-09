@@ -68,4 +68,4 @@ require (
 	sigs.k8s.io/yaml v1.2.0 // indirect
 )
 
-replace github.com/nats-io/nats-server/v2 => github.com/nats-io/nats-server/v2 v2.7.2
+replace github.com/nats-io/nats-server/v2 => github.com/nats-io/nats-server/v2 v2.11.4
