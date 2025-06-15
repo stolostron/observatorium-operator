@@ -19,7 +19,7 @@ require (
 	github.com/fatih/color v1.9.0 // indirect
 	github.com/go-kit/kit v0.10.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
-	github.com/go-logr/logr v1.2.0 // indirect
+	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/gobuffalo/flect v0.2.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
@@ -64,7 +64,7 @@ require (
 	k8s.io/apiextensions-apiserver v0.20.2 // indirect
 	k8s.io/client-go v0.20.2 // indirect
 	k8s.io/klog/v2 v2.80.1 // indirect
-	k8s.io/utils 4c0f3b243397 // indirect
+	k8s.io/utils v0.0.0-20250604170112-4c0f3b243397 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.0.2 // indirect
 	sigs.k8s.io/yaml v1.2.0 // indirect
 )
