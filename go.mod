@@ -5,7 +5,7 @@ go 1.24.0
 toolchain go1.24.4
 
 require (
-	github.com/brancz/locutus v0.0.0-20210511124350-7a84f4d1bcb3
+	github.com/brancz/locutus v0.1.0
 	k8s.io/api v0.33.2
 	k8s.io/apimachinery v0.33.2
 	sigs.k8s.io/controller-runtime v0.5.0
