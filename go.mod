@@ -8,7 +8,7 @@ require (
 	github.com/brancz/locutus v0.0.0-20210511124350-7a84f4d1bcb3
 	k8s.io/api v0.33.2
 	k8s.io/apimachinery v0.33.2
-	sigs.k8s.io/controller-runtime v0.5.0
+	sigs.k8s.io/controller-runtime v0.21.0
 	sigs.k8s.io/controller-tools v0.5.0
 )
 
