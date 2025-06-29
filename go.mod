@@ -28,7 +28,7 @@ require (
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.0.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.1 // indirect
-	github.com/imdario/mergo v0.3.6 // indirect
+	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/mattn/go-colorable v0.1.8 // indirect
@@ -58,7 +58,7 @@ require (
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/apiextensions-apiserver v0.20.2 // indirect
 	k8s.io/client-go v0.20.2 // indirect
 	k8s.io/klog/v2 v2.4.0 // indirect
