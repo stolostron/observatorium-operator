@@ -34,7 +34,7 @@ spec:
   - name: path-context
     value: .
   - name: hermetic
-    value: true
+    value: "true"
   - name: prefetch-input
     value: '[{"path": ".", "type": "gomod"}, {"path": "locutus/", "type": "gomod"}]'
   - name: build-source-image
@@ -407,14 +407,14 @@ spec:
         - "false"
     - name: sast-unicode-check
       params:
-        - name: image-url
-          value: $(tasks.build-image-index.results.IMAGE_URL)
-        - name: SOURCE_ARTIFACT
-          value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
-        - name: CACHI2_ARTIFACT
-          value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
+      - name: image-url
+        value: $(tasks.build-image-index.results.IMAGE_URL)
+      - name: SOURCE_ARTIFACT
+        value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
+      - name: CACHI2_ARTIFACT
+        value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
       runAfter:
-        - build-image-index
+      - build-image-index
       taskRef:
         params:
           - name: name
@@ -425,23 +425,22 @@ spec:
             value: task
         resolver: bundles
       when:
-        - input: $(params.skip-checks)
-          operator: in
-          values:
-            - "false"
-      workspaces: []
+      - input: $(params.skip-checks)
+        operator: in
+        values:
+        - "false"
     - name: sast-shell-check
       params:
-        - name: image-digest
-          value: $(tasks.build-image-index.results.IMAGE_DIGEST)
-        - name: image-url
-          value: $(tasks.build-image-index.results.IMAGE_URL)
-        - name: SOURCE_ARTIFACT
-          value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
-        - name: CACHI2_ARTIFACT
-          value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
+      - name: image-digest
+        value: $(tasks.build-image-index.results.IMAGE_DIGEST)
+      - name: image-url
+        value: $(tasks.build-image-index.results.IMAGE_URL)
+      - name: SOURCE_ARTIFACT
+        value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
+      - name: CACHI2_ARTIFACT
+        value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
       runAfter:
-        - build-image-index
+      - build-image-index
       taskRef:
         params:
           - name: name
@@ -452,11 +451,10 @@ spec:
             value: task
         resolver: bundles
       when:
-        - input: $(params.skip-checks)
-          operator: in
-          values:
-            - "false"
-      workspaces: []
+      - input: $(params.skip-checks)
+        operator: in
+        values:
+        - "false"
     - name: clamav-scan
       params:
       - name: image-digest
@@ -546,7 +544,8 @@ spec:
       optional: true
     - name: netrc
       optional: true
-  taskRunTemplate: {}
+  taskRunTemplate:
+    serviceAccountName: build-pipeline-observatorium-operator-acm-213
   workspaces:
   - name: git-auth
     secret:
