@@ -21,6 +21,7 @@ local defaults = {
     },
   },
   queryRangeCache: {},
+  queryUrl: '',
   labelsCache: {},
   logLevel: 'info',
   logFormat: 'logfmt',
@@ -63,6 +64,19 @@ local defaults = {
   securityContext:: {
     fsGroup: 65534,
     runAsUser: 65534,
+    runAsGroup: 65532,
+    runAsNonRoot: true,
+    seccompProfile: { type: 'RuntimeDefault' },
+  },
+
+  securityContextContainer:: {
+    runAsUser: defaults.securityContext.runAsUser,
+    runAsGroup: defaults.securityContext.runAsGroup,
+    runAsNonRoot: defaults.securityContext.runAsNonRoot,
+    seccompProfile: defaults.securityContext.seccompProfile,
+    allowPrivilegeEscalation: false,
+    readOnlyRootFilesystem: true,
+    capabilities: { drop: ['ALL'] },
   },
 
   serviceAccountAnnotations:: {},
@@ -174,6 +188,10 @@ function(params) {
             { config+: { service_name: defaults.name } } + tqf.config.tracing
           ),
         ] else []
+      ) + (
+        if tqf.config.queryUrl != '' then [
+          '--alert.query-url=' + tqf.config.queryUrl,
+        ] else []
       ),
       env: [
         {
@@ -203,6 +221,7 @@ function(params) {
         path: '/-/ready',
       } },
       resources: if tqf.config.resources != {} then tqf.config.resources else {},
+      securityContext: tqf.config.securityContextContainer,
       terminationMessagePolicy: 'FallbackToLogsOnError',
     };
 
@@ -262,6 +281,7 @@ function(params) {
         {
           port: 'http',
           relabelings: [{
+            action: 'replace',
             sourceLabels: ['namespace', 'pod'],
             separator: '/',
             targetLabel: 'instance',
