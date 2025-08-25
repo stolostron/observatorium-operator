@@ -19,6 +19,12 @@ function(params) {
     'app.kubernetes.io/component': tr.config.name + '-router',
   },
 
+  podLabelSelector:: {
+    [labelName]: tr.routerLabels[labelName]
+    for labelName in std.objectFields(tr.routerLabels)
+    if labelName != 'app.kubernetes.io/version'
+  },
+
   service: {
     apiVersion: 'v1',
     kind: 'Service',
@@ -77,7 +83,7 @@ function(params) {
     },
     spec: {
       replicas: tr.config.routerReplicas,
-      selector: { matchLabels: tr.routerLabels },
+      selector: { matchLabels: tr.podLabelSelector },
       template: {
         metadata: {
           labels: tr.routerLabels,
@@ -140,6 +146,7 @@ function(params) {
               path: '/-/ready',
             } },
             resources: if tr.config.resources != {} then tr.config.resources else {},
+            securityContext: tr.config.securityContextContainer,
             terminationMessagePolicy: 'FallbackToLogsOnError',
           }],
           volumes: [{
@@ -148,7 +155,7 @@ function(params) {
           }],
           terminationGracePeriodSeconds: 30,
           nodeSelector: {
-            'beta.kubernetes.io/os': 'linux',
+            'kubernetes.io/os': 'linux',
           },
         },
       },
