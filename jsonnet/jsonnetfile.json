@@ -17,7 +17,7 @@
           "subdir": "configuration"
         }
       },
-      "version": "main",
+      "version": "sc",
       "name": "stolo-configuration"
     },
     {
@@ -46,7 +46,7 @@
           "subdir": "jsonnet/lib"
         }
       },
-      "version": "release-2.5"
+      "version": "release-2.15"
     }
   ],
   "legacyImports": true
