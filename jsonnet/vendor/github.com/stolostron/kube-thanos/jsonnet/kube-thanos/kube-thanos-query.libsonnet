@@ -13,7 +13,6 @@ local defaults = {
   stores: ['dnssrv+_grpc._tcp.thanos-store.%s.svc.cluster.local' % defaults.namespace],
   rules: [],  // TODO(bwplotka): This is deprecated, switch to endpoints while ready.
   externalPrefix: '',
-  queryUrl: '',
   prefixHeader: '',
   autoDownsampling: true,
   useThanosEngine: false,
@@ -49,21 +48,7 @@ local defaults = {
   securityContext:: {
     fsGroup: 65534,
     runAsUser: 65534,
-    runAsGroup: 65532,
-    runAsNonRoot: true,
-    seccompProfile: { type: 'RuntimeDefault' },
   },
-
-  securityContextContainer:: {
-    runAsUser: defaults.securityContext.runAsUser,
-    runAsGroup: defaults.securityContext.runAsGroup,
-    runAsNonRoot: defaults.securityContext.runAsNonRoot,
-    seccompProfile: defaults.securityContext.seccompProfile,
-    allowPrivilegeEscalation: false,
-    readOnlyRootFilesystem: true,
-    capabilities: { drop: ['ALL'] },
-  },
-
   serviceAccountAnnotations:: {},
 };
 
@@ -187,10 +172,6 @@ function(params) {
             '--query.telemetry.request-series-seconds-quantiles=' + std.stripChars(quantile, ' ')
             for quantile in std.split(tq.config.telemetrySeriesQuantiles, ',')
           ] else []
-        ) + (
-          if tq.config.queryUrl != '' then [
-            '--alert.query-url=' + tq.config.queryUrl,
-          ] else []
         ),
       env: [
         {
@@ -220,7 +201,6 @@ function(params) {
         path: '/-/ready',
       } },
       resources: if tq.config.resources != {} then tq.config.resources else {},
-      securityContext: tq.config.securityContextContainer,
       terminationMessagePolicy: 'FallbackToLogsOnError',
     };
 
