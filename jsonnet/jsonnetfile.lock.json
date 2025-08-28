@@ -120,7 +120,8 @@
         }
       },
       "version": "cd12a419fc00eeb354d1f48e3077648222b16c07",
-      "sum": "0yZzNAcHQER0vE90d4iur3mYSitIhe8DhIFBeWdlb6k="
+      "sum": "0yZzNAcHQER0vE90d4iur3mYSitIhe8DhIFBeWdlb6k=",
+      "name": "thanos-receive-controller"
     },
     {
       "source": {
@@ -234,8 +235,8 @@
           "subdir": "configuration"
         }
       },
-      "version": "509638d5f696f75a99b1c4a331979e93edd5687d",
-      "sum": "sMJTj2rTRFccy2PCA+P+QB8qkktl2BVgmp5mReyw28Y=",
+      "version": "5901ee57931cce4d7c736794a10469a7d7d3017c",
+      "sum": "mIbpSaYIFPHR04AVRcWVykQepGD9DoPMI3akxQPmMXs=",
       "name": "stolo-configuration"
     },
     {

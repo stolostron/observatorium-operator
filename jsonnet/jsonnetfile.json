@@ -17,7 +17,7 @@
           "subdir": "configuration"
         }
       },
-      "version": "sc",
+      "version": "main",
       "name": "stolo-configuration"
     },
     {
@@ -46,16 +46,7 @@
           "subdir": "jsonnet/lib"
         }
       },
-      "version": "main"
-    },
-    {
-      "source": {
-        "git": {
-          "remote": "https://github.com/observatorium/thanos-receive-controller.git",
-          "subdir": "jsonnet/lib"
-        }
-      },
-      "version": "main"
+      "version": "release-2.5"
     }
   ],
   "legacyImports": true

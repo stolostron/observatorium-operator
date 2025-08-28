@@ -514,17 +514,17 @@ local operatorObs = obs {
       if (
         v.kind == 'StatefulSet' ||
         v.kind == 'Deployment'
-      ) then {
+        ) then {
         template+: {
           spec+: {
             containers: [
-              c {
-                securityContext+: {
-                  readOnlyRootFilesystem: true,
-                  privileged: false,
-                },
+            c {
+              securityContext+: {
+                readOnlyRootFilesystem: true,
+                privileged: false
               }
-              for c in super.containers
+            }
+            for c in super.containers
             ],
           },
         },

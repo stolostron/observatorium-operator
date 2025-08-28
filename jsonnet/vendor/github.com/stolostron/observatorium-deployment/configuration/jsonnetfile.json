@@ -18,7 +18,7 @@
           "subdir": "jsonnet/lib"
         }
       },
-      "version": "main",
+      "version": "master",
       "name": "thanos-receive-controller"
     },
     {

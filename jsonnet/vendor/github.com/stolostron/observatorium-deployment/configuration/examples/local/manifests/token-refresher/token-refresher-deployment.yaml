@@ -29,7 +29,7 @@ spec:
         - --oidc.client-id=$(OIDC_CLIENT_ID)
         - --oidc.client-secret=$(OIDC_CLIENT_SECRET)
         - --oidc.issuer-url=$(OIDC_ISSUER_URL)
-        - --upstream.url=http://observatorium-xyz-observatorium-api.observatorium.svc.cluster.local:8080
+        - --url=http://observatorium-xyz-observatorium-api.observatorium.svc.cluster.local:8080
         env:
         - name: OIDC_AUDIENCE
           valueFrom:

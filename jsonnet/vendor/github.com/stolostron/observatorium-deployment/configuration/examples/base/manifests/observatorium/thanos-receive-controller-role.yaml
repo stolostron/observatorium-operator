@@ -20,15 +20,6 @@ rules:
   - get
   - create
   - update
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - list
-  - get
-  - update
 - apiGroups:
   - apps
   resources:
