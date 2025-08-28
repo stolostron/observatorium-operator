@@ -225,8 +225,8 @@
           "subdir": "jsonnet/kube-thanos"
         }
       },
-      "version": "a45804b352b9d0d811d6c6fd8c923d27c9a91874",
-      "sum": "cCbGOfWt+5lh8FTjLBB1w1815K1UUZ9g+C8CQruNwFY="
+      "version": "ac261330bb819523d2caba81b4e82add166436c7",
+      "sum": "sN9PqW93Kh+jyf5kvRKQgotY3xbRIU/h22TcNO2KTag="
     },
     {
       "source": {
@@ -256,8 +256,9 @@
           "subdir": "jsonnet/kube-thanos"
         }
       },
-      "version": "6fedb045db2aeb0a4a880f77bfdfb5d4580f51f9",
-      "sum": "cCbGOfWt+5lh8FTjLBB1w1815K1UUZ9g+C8CQruNwFY=",
+
+      "version": "ac261330bb819523d2caba81b4e82add166436c7",
+      "sum": "sN9PqW93Kh+jyf5kvRKQgotY3xbRIU/h22TcNO2KTag=",
       "name": "upstream-kube-thanos"
     },
     {
