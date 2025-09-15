@@ -148,6 +148,15 @@ local defaults = {
     'app.kubernetes.io/instance': defaults.name,
   },
 
+  securityContext: {
+    runAsUser: 65534,
+    runAsGroup: 65532,
+    runAsNonRoot: true,
+    seccompProfile: {
+      type: 'RuntimeDefault',
+    },
+  },
+
   podLabelSelector:: {
     [labelName]: defaults.commonLabels[labelName]
     for labelName in std.objectFields(defaults.commonLabels)
