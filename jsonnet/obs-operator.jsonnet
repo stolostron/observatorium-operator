@@ -165,7 +165,6 @@ local operatorObs = obs {
         kind: cr.kind,
         name: cr.metadata.name,
         uid: cr.metadata.uid,
-        blockOwnerdeletion: true,
         controller: true,
       }],
     } + (
