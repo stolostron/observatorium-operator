@@ -14,11 +14,11 @@
     {
       "source": {
         "git": {
-          "remote": "https://github.com/observatorium/thanos-receive-controller.git",
+          "remote": "https://github.com/stolostron/thanos-receive-controller.git",
           "subdir": "jsonnet/lib"
         }
       },
-      "version": "master",
+      "version": "release-2.16",
       "name": "thanos-receive-controller"
     },
     {
