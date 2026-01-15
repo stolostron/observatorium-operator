@@ -39,6 +39,10 @@ spec:
     value: '[{"path": ".", "type": "gomod"}, {"path": "locutus/", "type": "gomod"}]'
   - name: build-source-image
     value: "true"
+  - name: build-args
+    value:
+    - IMAGE_VERSION=2.13.0
+    - IMAGE_RELEASE={{revision}}
   pipelineRef:
     resolver: git
     params:
