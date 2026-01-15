@@ -29,9 +29,12 @@ ARG VCS_REF
 ARG DOCKERFILE_PATH
 ARG VCS_BRANCH
 
-LABEL vendor="Observatorium" \
-    name="observatorium/operator" \
+LABEL name="observatorium/operator" \
+    summary="observatorium-operator" \
+    vendor="Red Hat, Inc." \
+    com.redhat.component="observatorium-operator" \
     description="Observatorium Operator" \
+    io.openshift.tags="observability" \
     io.k8s.display-name="observatorium/operator" \
     io.k8s.description="Observatorium Operator" \
     maintainer="Observatorium <team-monitoring@redhat.com>" \
@@ -45,7 +48,12 @@ LABEL vendor="Observatorium" \
     org.label-schema.vcs-branch=$VCS_BRANCH \
     org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-url="https://github.com/observatorium/operator" \
-    org.label-schema.vendor="observatorium/operator" \
+    org.label-schema.vendor="Red Hat, Inc." \
     org.label-schema.version=$VERSION
+
+RUN mkdir -p /licenses
+COPY --from=builder /workspace/operator/LICENSE /licenses/
+
+USER 1001:1001
 
 ENTRYPOINT ["/locutus", "--renderer=jsonnet", "--renderer.jsonnet.entrypoint=main.jsonnet", "--trigger=resource", "--trigger.resource.config=config.yaml"]
