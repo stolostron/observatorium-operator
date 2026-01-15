@@ -8,7 +8,7 @@ metadata:
   name: observatorium-xyz
 spec:
   api:
-    image: quay.io/observatorium/observatorium:master-2020-11-02-v0.1.1-192-ge324057
+    image: quay.io/observatorium/api:main-2021-11-30-v0.1.2-106-g2adff5f
     rbac:
       roleBindings:
       - name: test
@@ -45,11 +45,34 @@ spec:
       configMapName: observatorium-xyz-tls
       keyKey: key.pem
       secretName: observatorium-xyz-tls
-    version: master-2020-11-02-v0.1.1-192-ge324057
+    version: main-2021-11-30-v0.1.2-106-g2adff5f
   hashrings:
   - hashring: default
     tenants: []
+  loki:
+    image: docker.io/grafana/loki:2.2.0
+    replicas:
+      compactor: 1
+      distributor: 1
+      ingester: 1
+      querier: 1
+      query_frontend: 1
+    version: 2.2.0
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 250Mi
   objectStorageConfig:
+    loki:
+      accessKeyIdKey: aws_access_key_id
+      bucketsKey: buckets
+      endpointKey: endpoint
+      regionKey: region
+      secretAccessKeyKey: aws_secret_access_key
+      secretName: loki-objectstorage
     thanos:
       key: thanos.yaml
       name: thanos-objectstorage
