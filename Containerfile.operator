@@ -29,7 +29,8 @@ ARG VCS_REF
 ARG DOCKERFILE_PATH
 ARG VCS_BRANCH
 
-LABEL name="observatorium/operator" \
+LABEL name="rhacm2/observatorium-rhel9-operator" \
+    cpe="cpe:/a:redhat:acm:2.15::el9" \
     summary="observatorium-operator" \
     com.redhat.component="observatorium-operator" \
     description="Observatorium Operator" \
