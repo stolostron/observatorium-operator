@@ -30,7 +30,8 @@ ARG VCS_BRANCH
 ARG IMAGE_VERSION
 ARG IMAGE_RELEASE
 
-LABEL name="observatorium/operator" \
+LABEL name="rhacm2/observatorium-rhel9-operator" \
+    cpe="cpe:/a:redhat:acm:2.14::el9" \
     summary="observatorium-operator" \
     vendor="Red Hat, Inc." \
     release="$IMAGE_RELEASE" \
