@@ -30,7 +30,6 @@
             containers: [
               if c.name == 'thanos-compact' then c {
                 args+: [
-                  '--debug.max-compaction-level=3',
                   '--block-discovery-strategy=recursive',
                 ],
               }
