@@ -62,7 +62,6 @@ spec:
         - --downsample.concurrency=4
         - --downsampling.disable
         - --deduplication.replica-label=replica
-        - --debug.max-compaction-level=3
         - --block-discovery-strategy=recursive
         env:
         - name: OBJSTORE_CONFIG
