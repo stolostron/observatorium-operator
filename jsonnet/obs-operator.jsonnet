@@ -525,6 +525,21 @@ local operatorObs = obs {
         },
       } else {}
     ) + (
+      if (v.kind == 'StatefulSet' &&
+          std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-compact') &&
+          std.objectHas(cr.spec.thanos.compact, 'args')) then {
+        template+: {
+          spec+: {
+            containers: [
+              if c.name == 'thanos-compact' then c {
+                args+: cr.spec.thanos.compact.args,
+              } else c
+              for c in super.containers
+            ],
+          },
+        },
+      } else {}
+    ) + (
       if (
         v.kind == 'StatefulSet' ||
         v.kind == 'Deployment'
