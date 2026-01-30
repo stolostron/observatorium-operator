@@ -439,6 +439,21 @@ local operatorObs = obs {
       } else {}
     ) + (
       if (v.kind == 'StatefulSet' &&
+          std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-receive') &&
+          std.objectHas(cr.spec.thanos.receivers, 'args')) then {
+        template+: {
+          spec+: {
+            containers: [
+              if c.name == 'thanos-receive' then c {
+                args+: cr.spec.thanos.receivers.args,
+              } else c
+              for c in super.containers
+            ],
+          },
+        },
+      } else {}
+    ) + (
+      if (v.kind == 'StatefulSet' &&
           std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-shard') &&
           std.objectHas(cr.spec.thanos.store, 'containers')) then {
         template+: {
