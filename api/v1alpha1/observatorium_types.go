@@ -495,6 +495,9 @@ type CompactSpec struct {
 	// Currently only the `args` value are overwritten.
 	// +optional
 	Containers []v1.Container `json:"containers,omitempty"`
+	// Args describes a list of custom flags to be passed to the compact container.
+	// +optional
+	Args []string `json:"args,omitempty"`
 }
 
 type VolumeClaimTemplate struct {
