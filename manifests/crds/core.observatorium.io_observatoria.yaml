@@ -1719,6 +1719,12 @@ spec:
                   compact:
                     description: Thanos CompactSpec
                     properties:
+                      args:
+                        description: Args describes a list of custom flags to be passed
+                          to the compact container.
+                        items:
+                          type: string
+                        type: array
                       containers:
                         description: |-
                           The container object, provides a way to override parameters of existing containers.
