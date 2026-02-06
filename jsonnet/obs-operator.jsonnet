@@ -439,6 +439,21 @@ local operatorObs = obs {
       } else {}
     ) + (
       if (v.kind == 'StatefulSet' &&
+          std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-receive') &&
+          std.objectHas(cr.spec.thanos.receivers, 'args')) then {
+        template+: {
+          spec+: {
+            containers: [
+              if c.name == 'thanos-receive' then c {
+                args+: cr.spec.thanos.receivers.args,
+              } else c
+              for c in super.containers
+            ],
+          },
+        },
+      } else {}
+    ) + (
+      if (v.kind == 'StatefulSet' &&
           std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-store-shard') &&
           std.objectHas(cr.spec.thanos.store, 'containers')) then {
         template+: {
@@ -506,6 +521,21 @@ local operatorObs = obs {
         template+: {
           spec+: {
             containers: override_containers(super.containers, cr.spec.thanos.compact.containers),
+          },
+        },
+      } else {}
+    ) + (
+      if (v.kind == 'StatefulSet' &&
+          std.startsWith(v.metadata.name, cr.metadata.name + '-thanos-compact') &&
+          std.objectHas(cr.spec.thanos.compact, 'args')) then {
+        template+: {
+          spec+: {
+            containers: [
+              if c.name == 'thanos-compact' then c {
+                args+: cr.spec.thanos.compact.args,
+              } else c
+              for c in super.containers
+            ],
           },
         },
       } else {}
