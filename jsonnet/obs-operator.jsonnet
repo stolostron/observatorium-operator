@@ -481,7 +481,7 @@ local operatorObs = obs {
             containers: [
               if x.name == 'observatorium-api'
               then x {
-                args+: ['--metrics.write-timeout=5m', '--server.read-header-timeout=10s'],
+                args+: ['--metrics.write-timeout=5m', '--server.read-header-timeout=5m'],
               }
               else x
               for x in super.containers
