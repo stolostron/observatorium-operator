@@ -31,7 +31,7 @@ ARG IMAGE_VERSION
 ARG IMAGE_RELEASE
 
 LABEL name="rhacm2/observatorium-rhel9-operator" \
-    cpe="cpe:/a:redhat:acm:2.16::el9" \
+    cpe="cpe:/a:redhat:acm:2.17::el9" \
     summary="observatorium-operator" \
     vendor="Red Hat, Inc." \
     release="$IMAGE_RELEASE" \
