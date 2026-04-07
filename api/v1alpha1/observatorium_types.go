@@ -359,6 +359,9 @@ type APISpec struct {
 	// AdditionalWriteEndpoints is a slice of additional write endpoint for the Observatorium API.
 	// +optional
 	AdditionalWriteEndpoints *EndpointsConfig `json:"additionalWriteEndpoints,omitempty"`
+	// ExtraVolumeMounts
+	// +optional
+	ExtraVolumeMount []VolumeMount `json:"extraVolumeMounts,omitempty"`
 }
 
 type QuerySpec struct {
