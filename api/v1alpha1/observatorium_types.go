@@ -361,7 +361,7 @@ type APISpec struct {
 	AdditionalWriteEndpoints *EndpointsConfig `json:"additionalWriteEndpoints,omitempty"`
 	// ExtraVolumeMounts
 	// +optional
-	ExtraVolumeMount []VolumeMount `json:"extraVolumeMounts,omitempty"`
+	ExtraVolumeMounts []VolumeMount `json:"extraVolumeMounts,omitempty"`
 }
 
 type QuerySpec struct {
