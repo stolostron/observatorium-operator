@@ -348,6 +348,8 @@ type APISpec struct {
 	TLS TLS `json:"tls,omitempty"`
 	// RBAC is an RBAC configuration for the Observatorium API.
 	RBAC APIRBAC `json:"rbac"`
+	// Alertmanager CA
+	AMCA TLS `json:"amca,omitempty"`
 	// Tenants is a slice of tenants for the Observatorium API.
 	Tenants []APITenant `json:"tenants"`
 	// Compute Resources required by this container.

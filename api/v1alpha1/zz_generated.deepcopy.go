@@ -21,7 +21,7 @@ package v1alpha1
 
 import (
 	"github.com/brancz/locutus/feedback"
-	v1 "k8s.io/api/core/v1"
+	"k8s.io/api/core/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -64,6 +64,7 @@ func (in *APISpec) DeepCopyInto(out *APISpec) {
 	}
 	out.TLS = in.TLS
 	in.RBAC.DeepCopyInto(&out.RBAC)
+	out.AMCA = in.AMCA
 	if in.Tenants != nil {
 		in, out := &in.Tenants, &out.Tenants
 		*out = make([]APITenant, len(*in))
