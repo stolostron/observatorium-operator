@@ -64,7 +64,6 @@ func (in *APISpec) DeepCopyInto(out *APISpec) {
 	}
 	out.TLS = in.TLS
 	in.RBAC.DeepCopyInto(&out.RBAC)
-	out.AMCA = in.AMCA
 	if in.Tenants != nil {
 		in, out := &in.Tenants, &out.Tenants
 		*out = make([]APITenant, len(*in))
