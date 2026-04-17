@@ -493,19 +493,6 @@ local operatorObs = obs {
             },
           },
           spec+: {
-            volumes+: [
-              if mount.type == 'configMap' then {
-                name: mount.name,
-                configMap: { name: mount.name },
-              } else {
-                name: mount.name,
-                secret: { secretName: mount.name },
-              }
-              for mount in
-                if std.objectHas(cr.spec, 'api') && std.objectHas(cr.spec.api, 'extraVolumeMounts')
-                then cr.spec.api.extraVolumeMounts
-                else []
-            ],
             containers: [
               if x.name == 'observatorium-api'
               then x {
