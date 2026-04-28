@@ -113,6 +113,16 @@ function(params) {
                 '--web.internal.listen=0.0.0.0:%s' % api.config.ports.internal,
                 '--metrics.read.endpoint=' + api.config.metrics.readEndpoint,
                 '--metrics.write.endpoint=' + api.config.metrics.writeEndpoint,
+              ] + (
+                if std.objectHas(api.config.metrics, 'alertmanagerEndpoints')
+                   && std.isArray(api.config.metrics.alertmanagerEndpoints)
+                   && std.length(api.config.metrics.alertmanagerEndpoints) > 0 then
+                  [
+                    '--metrics.alertmanager.endpoint=' + ep
+                    for ep in api.config.metrics.alertmanagerEndpoints
+                  ]
+                else []
+              ) + [
                 '--log.level=warn',
               ] + (
                 if api.config.logs != {} then

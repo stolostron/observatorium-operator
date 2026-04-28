@@ -136,7 +136,13 @@ local operatorObs = obs {
         operatorObs.thanos.receiversService.metadata.namespace,
         operatorObs.thanos.receiversService.spec.ports[2].port,
       ],
-    },
+    } + (
+      if std.objectHas(cr.spec, 'api')
+         && std.objectHas(cr.spec.api, 'metricsAlertmanagerEndpoints')
+         && std.length(cr.spec.api.metricsAlertmanagerEndpoints) > 0 then {
+        alertmanagerEndpoints: cr.spec.api.metricsAlertmanagerEndpoints,
+      } else {}
+    ),
     logs: if std.objectHas(cr.spec, 'loki') then {
       readEndpoint: 'http://%s.%s.svc.cluster.local:%d' % [
         operatorObs.loki.manifests['query-frontend-http-service'].metadata.name,
@@ -555,17 +561,17 @@ local operatorObs = obs {
       if (
         v.kind == 'StatefulSet' ||
         v.kind == 'Deployment'
-        ) then {
+      ) then {
         template+: {
           spec+: {
             containers: [
-            c {
-              securityContext+: {
-                readOnlyRootFilesystem: true,
-                privileged: false
+              c {
+                securityContext+: {
+                  readOnlyRootFilesystem: true,
+                  privileged: false,
+                },
               }
-            }
-            for c in super.containers
+              for c in super.containers
             ],
           },
         },
