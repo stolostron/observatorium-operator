@@ -359,6 +359,9 @@ type APISpec struct {
 	// AdditionalWriteEndpoints is a slice of additional write endpoint for the Observatorium API.
 	// +optional
 	AdditionalWriteEndpoints *EndpointsConfig `json:"additionalWriteEndpoints,omitempty"`
+	// MetricsAlertmanagerEndpoints are passed to observatorium-api as repeated --metrics.alertmanager.endpoint flags.
+	// +optional
+	MetricsAlertmanagerEndpoints []string `json:"metricsAlertmanagerEndpoints,omitempty"`
 	// ExtraVolumeMounts
 	// +optional
 	ExtraVolumeMounts []VolumeMount `json:"extraVolumeMounts,omitempty"`

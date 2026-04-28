@@ -21,7 +21,7 @@ package v1alpha1
 
 import (
 	"github.com/brancz/locutus/feedback"
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -76,6 +76,11 @@ func (in *APISpec) DeepCopyInto(out *APISpec) {
 		in, out := &in.AdditionalWriteEndpoints, &out.AdditionalWriteEndpoints
 		*out = new(EndpointsConfig)
 		(*in).DeepCopyInto(*out)
+	}
+	if in.MetricsAlertmanagerEndpoints != nil {
+		in, out := &in.MetricsAlertmanagerEndpoints, &out.MetricsAlertmanagerEndpoints
+		*out = make([]string, len(*in))
+		copy(*out, *in)
 	}
 	if in.ExtraVolumeMounts != nil {
 		in, out := &in.ExtraVolumeMounts, &out.ExtraVolumeMounts
