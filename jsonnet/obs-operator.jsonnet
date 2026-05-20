@@ -503,18 +503,6 @@ local operatorObs = obs {
               if x.name == 'observatorium-api'
               then x {
                 args+: ['--metrics.write-timeout=5m', '--server.read-header-timeout=5m'],
-                volumeMounts+: [
-                  {
-                    name: mount.name,
-                    mountPath: mount.mountPath,
-                    subPath: mount.key,
-                    readOnly: true,
-                  }
-                  for mount in
-                    if std.objectHas(cr.spec, 'api') && std.objectHas(cr.spec.api, 'extraVolumeMounts')
-                    then cr.spec.api.extraVolumeMounts
-                    else []
-                ],
               }
               else x
               for x in super.containers
