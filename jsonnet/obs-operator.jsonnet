@@ -4,6 +4,24 @@ local loki = (import 'github.com/observatorium/observatorium/configuration/compo
 local api = (import 'lib/observatorium-api.libsonnet');
 local obs = (import 'stolo-configuration/components/observatorium.libsonnet');
 
+local argKey(arg) = std.splitLimit(arg, '=', 2)[0];
+local merge_args(base, overrides) =
+// Return only the base if the list of override args/args from CR is empty
+  if std.length(overrides) == 0 then base else
+  // Creates a map that has {"--a" : "--a=2} for example based on the args from CR
+  local overrideMap = { [argKey(arg)]: arg for arg in overrides };
+  // // Creates a map that has {"--b : "true"} for example based on args from the base/kube-thanos
+  local baseKeys = { [argKey(arg)]: true for arg in base };
+  [
+    // For each argument in the base, if the override map has that argument, then that argument and its value is added to a list
+    // Else the base value argument and its value is added instead
+    if std.objectHas(overrideMap, argKey(arg)) then overrideMap[argKey(arg)] else arg
+    for arg in base
+  ] + [
+    // Then for each argument in override if it is not in the base, add its argument 
+    arg for arg in overrides
+    if !std.objectHas(baseKeys, argKey(arg))
+  ];
 local override_containers(org_containers, custom_containers) =
   [
     if (c.name == custom_container.name) then c {
@@ -538,7 +556,7 @@ local operatorObs = obs {
           spec+: {
             containers: [
               if c.name == 'thanos-compact' then c {
-                args+: cr.spec.thanos.compact.args,
+                args: merge_args(c.args,cr.spec.thanos.compact.args)
               } else c
               for c in super.containers
             ],
