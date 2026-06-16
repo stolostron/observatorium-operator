@@ -2,7 +2,7 @@
 
 [![Build Status](https://circleci.com/gh/observatorium/operator.svg?style=svg)](https://circleci.com/gh/observatorium/operator)
 
-Operator deploying the Observatorium project.
+Operator deploying the Observatorium project test.
 Currently, this includes:
 
 1. the operator itself; and
