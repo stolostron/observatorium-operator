@@ -520,7 +520,18 @@ local operatorObs = obs {
             containers: [
               if x.name == 'observatorium-api'
               then x {
-                args+: ['--metrics.write-timeout=5m', '--server.read-header-timeout=5m'],
+                local queryTimeout = if std.objectHas(cr.spec.api, 'queryTimeout') && cr.spec.api.queryTimeout != ''
+                                     then cr.spec.api.queryTimeout
+                                     else '5m',
+                local writeTimeout = if std.objectHas(cr.spec.api, 'writeTimeout') && cr.spec.api.writeTimeout != ''
+                                     then cr.spec.api.writeTimeout
+                                     else '12m',
+                args+: [
+                  '--metrics.write-timeout=5m',
+                  '--server.read-header-timeout=5m',
+                  '--server.read-timeout=' + queryTimeout,
+                  '--server.write-timeout=' + writeTimeout,
+                ],
               }
               else x
               for x in super.containers
