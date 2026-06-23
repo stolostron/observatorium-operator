@@ -365,6 +365,20 @@ type APISpec struct {
 	// ExtraVolumeMounts
 	// +optional
 	ExtraVolumeMounts []VolumeMount `json:"extraVolumeMounts,omitempty"`
+	// QueryTimeout is the maximum duration for reading the entire request
+	// including the body. Applied to Go HTTP server's ReadTimeout.
+	// Controls the read/query path through the API gateway.
+	// Must be a valid duration string (e.g., "5m", "300s").
+	// Default: "5m"
+	// +optional
+	QueryTimeout string `json:"queryTimeout,omitempty"`
+	// WriteTimeout is the maximum duration for writing the response.
+	// Applied to Go HTTP server's WriteTimeout.
+	// Controls the write/ingest path through the API gateway.
+	// Must be a valid duration string (e.g., "5m", "12m").
+	// Default: "12m"
+	// +optional
+	WriteTimeout string `json:"writeTimeout,omitempty"`
 }
 
 type QuerySpec struct {
