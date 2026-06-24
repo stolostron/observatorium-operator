@@ -25,8 +25,9 @@ jobs:
       - name: Regenerate deepcopy
         run: make generate
 
-      - name: Regenerate CRD manifests
-        run: make manifests/crds/core.observatorium.io_observatoria.yaml
+      # CRD manifest regeneration skipped on release-2.14: controller-gen v0.5.0
+      # cannot resolve newer k8s types. CRD is regenerated locally with a newer
+      # controller-gen and committed manually.
 
       - name: Check for uncommitted changes
         run: git diff --exit-code
