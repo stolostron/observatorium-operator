@@ -88,6 +88,23 @@ local defaults = {
     replicationFactor: 1,
     retention: '4d',
     storage: '50Gi',
+    logLevel: 'info',
+    enableLocalEndpoint: true,
+    logFormat: 'logfmt',
+    labels: [
+      'replica="$(NAME)"',
+      'receive="true"',
+    ],
+    ports: {
+      grpc: 10901,
+      http: 10902,
+      'remote-write': 19291,
+    },
+    storeLimits: {},
+    tracing: {},
+    receiveLimitsConfigFile: {},
+    tenantLabelName: null,
+    tenantHeader: null,
     serviceMonitor: false,
     volumeClaimTemplate: {
       spec: {
@@ -212,7 +229,6 @@ function(params) {
     replicaLabels: thanos.config.replicaLabels,
     objectStorageConfig: thanos.config.objectStorageConfig,
     hashringConfigMapName: '%s-generated' % thanos.receiveController.configmap.metadata.name,
-    logLevel: 'info',
   }),
 
   rule:: t.rule(thanos.config.rule {

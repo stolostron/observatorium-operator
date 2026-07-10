@@ -46,7 +46,7 @@
           "subdir": "jsonnet/lib"
         }
       },
-      "version": "release-2.5"
+      "version": "97358548e62dc223fc678a3c3ac74339c2253780"
     }
   ],
   "legacyImports": true

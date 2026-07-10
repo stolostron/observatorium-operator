@@ -26,6 +26,7 @@ local defaults = {
   rateLimiter: {},
   internal: {},
   extraVolumeMounts: [],
+  securityContext: {},
 
   commonLabels:: {
     'app.kubernetes.io/name': 'observatorium-api',
@@ -108,6 +109,7 @@ function(params) {
               name: 'observatorium-api',
               image: api.config.image,
               imagePullPolicy: api.config.imagePullPolicy,
+              securityContext: api.config.securityContext,
               args: [
                 '--web.listen=0.0.0.0:%s' % api.config.ports.public,
                 '--web.internal.listen=0.0.0.0:%s' % api.config.ports.internal,
@@ -158,6 +160,12 @@ function(params) {
                     if std.objectHas(api.config.tls, 'serverName') then
                       [
                         '--tls.healthchecks.server-name=' + api.config.tls.serverName,
+                      ]
+                    else []
+                  ) + (
+                    if std.objectHas(api.config.tls, 'cipherSuites') then
+                      [
+                        '--tls.cipher-suites=' + api.config.tls.cipherSuites,
                       ]
                     else []
                   )
@@ -297,19 +305,20 @@ function(params) {
                         readOnly: true,
                       }
                       for name in api.config.additionalWriteEndpoints.mountSecrets
-                    ] else [])
-                   else []
-                 ) + (
-                   if std.length(api.config.extraVolumeMounts) > 0 then [
-                     {
-                       name: volumeMount.name,
-                       mountPath: volumeMount.mountPath,
-                       subPath: volumeMount.key,
-                       readOnly: true,
-                     }
-                     for volumeMount in api.config.extraVolumeMounts
-                   ] else []
-                 ),
+                    ] else []
+                  )
+                  else []
+                ) + (
+                  if std.length(api.config.extraVolumeMounts) > 0 then [
+                    {
+                      name: mount.name,
+                      mountPath: mount.mountPath,
+                      subPath: mount.key,
+                      readOnly: true,
+                    }
+                    for mount in api.config.extraVolumeMounts
+                  ] else []
+                ),
             },
           ],
           volumes:
@@ -391,16 +400,14 @@ function(params) {
               ] else [])
              else []) +
             (if std.length(api.config.extraVolumeMounts) > 0 then [
-               { name: volumeMount.name } +
-               (
-                 if volumeMount.type == 'configMap' then {
-                   configMap: { name: volumeMount.name },
-                 }
-                 else {
-                   secret: { secretName: volumeMount.name },
-                 }
-               )
-               for volumeMount in api.config.extraVolumeMounts
+               if mount.type == 'configMap' then {
+                 name: mount.name,
+                 configMap: { name: mount.name },
+               } else {
+                 name: mount.name,
+                 secret: { secretName: mount.name },
+               }
+               for mount in api.config.extraVolumeMounts
              ] else []),
         },
       },

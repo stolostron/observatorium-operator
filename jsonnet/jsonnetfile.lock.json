@@ -235,8 +235,8 @@
           "subdir": "configuration"
         }
       },
-      "version": "0d7102af5812fb3a3860fa24da9abbecdd0791f1",
-      "sum": "scQRMQLigajRyX7F6E9vvQQmmOUtd9VYBo+sRknllhs=",
+      "version": "8c14b6cd017f41572076decaaabda4b184aed84f",
+      "sum": "AiHePOoxo8tNCcZuLd2WYcC1u/b5SUomVRDNfIyrpMU=",
       "name": "stolo-configuration"
     },
     {
@@ -246,8 +246,8 @@
           "subdir": "jsonnet/lib"
         }
       },
-      "version": "2df9e7bc65394014cc7a1b61f37e0f8837f9ac91",
-      "sum": "axYSi0irj4BhHKYqQ9U575vNaX1Xo8IapJ/BpQUuzQI="
+      "version": "97358548e62dc223fc678a3c3ac74339c2253780",
+      "sum": "KaCTJO94cdpQDbu4HYfCZBOm8J4hnRonuuqtiOa4wtY="
     },
     {
       "source": {
@@ -256,7 +256,6 @@
           "subdir": "jsonnet/kube-thanos"
         }
       },
-      
       "version": "ac261330bb819523d2caba81b4e82add166436c7",
       "sum": "sN9PqW93Kh+jyf5kvRKQgotY3xbRIU/h22TcNO2KTag=",
       "name": "upstream-kube-thanos"
