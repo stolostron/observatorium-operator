@@ -152,6 +152,9 @@ type ReceiversSpec struct {
 	// ServiceMonitor enables servicemonitor.
 	// +optional
 	ServiceMonitor bool `json:"serviceMonitor,omitempty"`
+	// LogLevel sets the log verbosity for the Thanos Receive component.
+	// +optional
+	LogLevel string `json:"logLevel,omitempty"`
 	// How long to retain raw samples on local storage
 	// +optional
 	Retention string `json:"retention,omitempty"`

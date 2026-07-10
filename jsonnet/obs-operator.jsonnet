@@ -61,6 +61,7 @@ local operatorObs = obs {
     } + if std.objectHas(cr.spec.thanos, 'receiveController') then cr.spec.thanos.receiveController else {},
 
     receivers+:: {
+      logLevel: if std.objectHas(cr.spec.thanos, 'receivers') && std.objectHas(cr.spec.thanos.receivers, 'logLevel') then cr.spec.thanos.receivers.logLevel else 'info',
       securityContext: if std.objectHas(cr.spec, 'securityContext') then cr.spec.securityContext else obs.thanos.receivers.config.securityContext,
     } + if std.objectHas(cr.spec.thanos, 'receivers') then cr.spec.thanos.receivers else {},
 

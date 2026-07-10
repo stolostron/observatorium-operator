@@ -8266,6 +8266,10 @@ spec:
                           - name
                           type: object
                         type: array
+                      logLevel:
+                        description: LogLevel sets the log verbosity for the Thanos
+                          Receive component.
+                        type: string
                       replicas:
                         description: Number of Receiver replicas.
                         format: int32
