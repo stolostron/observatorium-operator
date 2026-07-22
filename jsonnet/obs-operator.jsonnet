@@ -4,6 +4,13 @@ local loki = (import 'github.com/observatorium/observatorium/configuration/compo
 local api = (import 'lib/observatorium-api.libsonnet');
 local obs = (import 'stolo-configuration/components/observatorium.libsonnet');
 
+local tlsProfile = if std.objectHas(cr.spec.thanos, 'tlsProfile') then cr.spec.thanos.tlsProfile else {};
+local tlsProfileConfig = (
+  if std.objectHas(tlsProfile, 'cipherSuites') then { tlsCipherSuites: tlsProfile.cipherSuites } else {}
+) + (
+  if std.objectHas(tlsProfile, 'minVersion') then { tlsMinVersion: tlsProfile.minVersion } else {}
+);
+
 local argKey(arg) = std.splitLimit(arg, '=', 2)[0];
 local merge_args(base, overrides) =
 // Return only the base if the list of override args/args from CR is empty
@@ -49,6 +56,7 @@ local operatorObs = obs {
     version: if std.objectHas(cr.spec.thanos, 'version') then cr.spec.thanos.version else obs.thanos.config.version,
     objectStorageConfig: cr.spec.objectStorageConfig.thanos,
     hashrings: cr.spec.hashrings,
+  } + tlsProfileConfig + {
     compact+:: {
       logLevel: 'info',
       disableDownsampling: if std.objectHas(cr.spec.thanos, 'compact') && std.objectHas(cr.spec.thanos.compact, 'enableDownsampling') then !cr.spec.thanos.compact.enableDownsampling else obs.thanos.compact.config.disableDownsampling,
