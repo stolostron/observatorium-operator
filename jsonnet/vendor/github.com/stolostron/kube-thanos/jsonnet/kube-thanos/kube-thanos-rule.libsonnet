@@ -32,6 +32,8 @@ local defaults = {
   },
   tracing: {},
   extraEnv: [],
+  tlsCipherSuites: '',
+  tlsMinVersion: '',
 
   commonLabels:: {
     'app.kubernetes.io/name': 'thanos-rule',
@@ -49,6 +51,19 @@ local defaults = {
   securityContext:: {
     fsGroup: 65534,
     runAsUser: 65534,
+    runAsGroup: 65532,
+    runAsNonRoot: true,
+    seccompProfile: { type: 'RuntimeDefault' },
+  },
+
+  securityContextContainer:: {
+    runAsUser: defaults.securityContext.runAsUser,
+    runAsGroup: defaults.securityContext.runAsGroup,
+    runAsNonRoot: defaults.securityContext.runAsNonRoot,
+    seccompProfile: defaults.securityContext.seccompProfile,
+    allowPrivilegeEscalation: false,
+    readOnlyRootFilesystem: true,
+    capabilities: { drop: ['ALL'] },
   },
 
   serviceAccountAnnotations:: {},
@@ -153,6 +168,14 @@ function(params) {
             '--remote-write.config-file=/etc/thanos/config/' + tr.config.remoteWriteConfigFile.name + '/' + tr.config.remoteWriteConfigFile.key,
           ]
           else []
+        ) + (
+          if std.length(tr.config.tlsCipherSuites) > 0 then [
+            '--grpc-server-tls-ciphers=' + tr.config.tlsCipherSuites,
+          ] else []
+        ) + (
+          if std.length(tr.config.tlsMinVersion) > 0 then [
+            '--grpc-server-tls-min-version=' + tr.config.tlsMinVersion,
+          ] else []
         ),
       env: [
         { name: 'NAME', valueFrom: { fieldRef: { fieldPath: 'metadata.name' } } },
@@ -215,6 +238,7 @@ function(params) {
 
       } },
       resources: if tr.config.resources != {} then tr.config.resources else {},
+      securityContext: tr.config.securityContextContainer,
       terminationMessagePolicy: 'FallbackToLogsOnError',
     };
 

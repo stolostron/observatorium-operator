@@ -225,8 +225,8 @@
           "subdir": "jsonnet/kube-thanos"
         }
       },
-      "version": "ac261330bb819523d2caba81b4e82add166436c7",
-      "sum": "sN9PqW93Kh+jyf5kvRKQgotY3xbRIU/h22TcNO2KTag="
+      "version": "458a335beed2670f23fd9869406a99f1bc61f2cc",
+      "sum": "SH/ELLGJXzPKDEmfotYwPF7Dmr/IZf1pVw+j/lfYyi4="
     },
     {
       "source": {
@@ -235,8 +235,8 @@
           "subdir": "configuration"
         }
       },
-      "version": "8c14b6cd017f41572076decaaabda4b184aed84f",
-      "sum": "AiHePOoxo8tNCcZuLd2WYcC1u/b5SUomVRDNfIyrpMU=",
+      "version": "5d0497f377f56fbfdd8372394b6c9e2d30a5b45e",
+      "sum": "oExcq0Wj+HRndcWsNStjBOQwqDaamZPm32cAZtkTCRQ=",
       "name": "stolo-configuration"
     },
     {
@@ -246,8 +246,19 @@
           "subdir": "jsonnet/lib"
         }
       },
-      "version": "97358548e62dc223fc678a3c3ac74339c2253780",
-      "sum": "KaCTJO94cdpQDbu4HYfCZBOm8J4hnRonuuqtiOa4wtY="
+      "version": "2a3a72d7c5da4fc5f1d4256f2fed15105831b1a0",
+      "sum": "EiCkSfQ68NLS6IY/AIjqhmV/B1fjj7DHbyiXGSyO3fk="
+    },
+    {
+      "source": {
+        "git": {
+          "remote": "https://github.com/stolostron/thanos-receive-controller.git",
+          "subdir": "jsonnet/lib"
+        }
+      },
+      "version": "71db27cf12f5f8270b69b2083cc6c75e818b144d",
+      "sum": "KG4fosMr9R2szMfkrIadwZts3OqHg7E4aQqzMdg+og8=",
+      "name": "thanos-receive-controller"
     },
     {
       "source": {

@@ -17,6 +17,8 @@ local defaults = {
     name: 'thanos-objectstorage',
     key: 'thanos.yaml',
   },
+  tlsCipherSuites: '',
+  tlsMinVersion: '',
   hashrings: [{
     hashring: 'default',
     tenants: [],
@@ -228,6 +230,8 @@ function(params) {
     version: thanos.config.version,
     replicaLabels: thanos.config.replicaLabels,
     objectStorageConfig: thanos.config.objectStorageConfig,
+    tlsCipherSuites: thanos.config.tlsCipherSuites,
+    tlsMinVersion: thanos.config.tlsMinVersion,
     hashringConfigMapName: '%s-generated' % thanos.receiveController.configmap.metadata.name,
   }),
 
@@ -241,6 +245,8 @@ function(params) {
     reloaderImagePullPolicy: thanos.config.rule.reloaderImagePullPolicy,
     version: thanos.config.version,
     objectStorageConfig: thanos.config.objectStorageConfig,
+    tlsCipherSuites: thanos.config.tlsCipherSuites,
+    tlsMinVersion: thanos.config.tlsMinVersion,
     queriers: ['dnssrv+_http._tcp.%s.%s.svc.cluster.local' % [thanos.query.service.metadata.name, thanos.query.service.metadata.namespace]],
   }),
 
@@ -252,6 +258,8 @@ function(params) {
     imagePullPolicy: thanos.config.imagePullPolicy,
     version: thanos.config.version,
     objectStorageConfig: thanos.config.objectStorageConfig,
+    tlsCipherSuites: thanos.config.tlsCipherSuites,
+    tlsMinVersion: thanos.config.tlsMinVersion,
     replicas: 1,
     logLevel: 'info',
     local memcachedDefaults = {
@@ -290,6 +298,8 @@ function(params) {
     image: thanos.config.image,
     imagePullPolicy: thanos.config.imagePullPolicy,
     version: thanos.config.version,
+    tlsCipherSuites: thanos.config.tlsCipherSuites,
+    tlsMinVersion: thanos.config.tlsMinVersion,
     stores: [
       'dnssrv+_grpc._tcp.%s.%s.svc.cluster.local' % [service.metadata.name, service.metadata.namespace]
       for service in
