@@ -115,6 +115,14 @@ function(params) {
             { config+: { service_name: defaults.name } } + ts.config.tracing
           ),
         ] else []
+      ) + (
+        if std.length(ts.config.tlsCipherSuites) > 0 then [
+          '--grpc-server-tls-ciphers=' + ts.config.tlsCipherSuites,
+        ] else []
+      ) + (
+        if std.length(ts.config.tlsMinVersion) > 0 then [
+          '--grpc-server-tls-min-version=' + ts.config.tlsMinVersion,
+        ] else []
       ),
       env: [
         {
@@ -167,6 +175,7 @@ function(params) {
         path: '/-/ready',
       } },
       resources: if ts.config.resources != {} then ts.config.resources else {},
+      securityContext: ts.config.securityContextContainer,
       terminationMessagePolicy: 'FallbackToLogsOnError',
     };
 

@@ -168,6 +168,12 @@ function(params) {
                         '--tls.cipher-suites=' + api.config.tls.cipherSuites,
                       ]
                     else []
+                  ) + (
+                    if std.objectHas(api.config.tls, 'minVersion') then
+                      [
+                        '--tls.min-version=' + api.config.tls.minVersion,
+                      ]
+                    else []
                   )
                 else []
               ) + (

@@ -115,6 +115,22 @@ function(params) {
           '--receive.limits-config-file=/etc/thanos/config/' + tr.config.receiveLimitsConfigFile.name + '/' + tr.config.receiveLimitsConfigFile.key,
         ]
         else []
+      ) + (
+        if std.length(tr.config.tlsCipherSuites) > 0 then [
+          '--grpc-server-tls-ciphers=' + tr.config.tlsCipherSuites,
+        ] else []
+      ) + (
+        if std.length(tr.config.tlsMinVersion) > 0 then [
+          '--grpc-server-tls-min-version=' + tr.config.tlsMinVersion,
+        ] else []
+      ) + (
+        if std.length(tr.config.tlsCipherSuites) > 0 then [
+          '--remote-write.server-tls-ciphers=' + tr.config.tlsCipherSuites,
+        ] else []
+      ) + (
+        if std.length(tr.config.tlsMinVersion) > 0 then [
+          '--remote-write.server-tls-min-version=' + tr.config.tlsMinVersion,
+        ] else []
       ),
       env: [
         { name: 'NAME', valueFrom: { fieldRef: { fieldPath: 'metadata.name' } } },
