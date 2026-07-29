@@ -19,6 +19,17 @@ local basePodSecurityContext = {
 
 local crSecurityContext = basePodSecurityContext + (if std.objectHas(cr.spec, 'securityContext') then cr.spec.securityContext else {});
 
+local baseContainerSecurityContext = {
+  runAsGroup: 65532,
+  runAsNonRoot: true,
+  allowPrivilegeEscalation: false,
+  readOnlyRootFilesystem: true,
+  capabilities: { drop: ['ALL'] },
+  seccompProfile: { type: 'RuntimeDefault' },
+};
+
+local crSecurityContextContainer = baseContainerSecurityContext + (if std.objectHas(cr.spec, 'securityContext') then cr.spec.securityContext else {});
+
 local argKey(arg) = std.splitLimit(arg, '=', 2)[0];
 local merge_args(base, overrides) =
 // Return only the base if the list of override args/args from CR is empty
@@ -69,26 +80,31 @@ local operatorObs = obs {
       logLevel: 'info',
       disableDownsampling: if std.objectHas(cr.spec.thanos, 'compact') && std.objectHas(cr.spec.thanos.compact, 'enableDownsampling') then !cr.spec.thanos.compact.enableDownsampling else obs.thanos.compact.config.disableDownsampling,
       securityContext: crSecurityContext,
+      securityContextContainer: crSecurityContextContainer,
     } + if std.objectHas(cr.spec.thanos, 'compact') then cr.spec.thanos.compact else {},
 
     receiveController+:: {
       hashrings: cr.spec.hashrings,
       securityContext: crSecurityContext,
+      securityContextContainer: crSecurityContextContainer,
     } + if std.objectHas(cr.spec.thanos, 'receiveController') then cr.spec.thanos.receiveController else {},
 
     receivers+:: {
       logLevel: if std.objectHas(cr.spec.thanos, 'receivers') && std.objectHas(cr.spec.thanos.receivers, 'logLevel') then cr.spec.thanos.receivers.logLevel else 'info',
       securityContext: crSecurityContext,
+      securityContextContainer: crSecurityContextContainer,
     } + if std.objectHas(cr.spec.thanos, 'receivers') then cr.spec.thanos.receivers else {},
 
     rule+:: {
       securityContext: crSecurityContext,
+      securityContextContainer: crSecurityContextContainer,
       alertmanagersURLs: if std.objectHas(cr.spec.thanos, 'rule') && std.objectHas(cr.spec.thanos.rule, 'alertmanagerURLs') then cr.spec.thanos.rule.alertmanagerURLs else obs.thanos.rule.config.alertmanagersURLs,
     } + if std.objectHas(cr.spec.thanos, 'rule') then cr.spec.thanos.rule else {},
 
     stores+:: {
       local deleteDelay = if std.objectHas(cr.spec.thanos, 'compact') && std.objectHas(cr.spec.thanos.compact, 'deleteDelay') then cr.spec.thanos.compact.deleteDelay else obs.thanos.compact.config.deleteDelay,
       securityContext: crSecurityContext,
+      securityContextContainer: crSecurityContextContainer,
       ignoreDeletionMarksDelay: std.ceil(std.parseInt(std.substr(deleteDelay, 0, std.length(deleteDelay) - 1)) / 2) + std.substr(deleteDelay, std.length(deleteDelay) - 1, std.length(deleteDelay)),
       local maxItemSize = if std.objectHas(cr.spec.thanos, 'store') && std.objectHas(cr.spec.thanos.store, 'cache') && std.objectHas(cr.spec.thanos.store.cache, 'maxItemSize') then cr.spec.thanos.store.cache.maxItemSize else obs.thanos.stores.config.maxItemSize,
       maxItemSize: std.strReplace(std.strReplace(maxItemSize, 'm', 'MiB'), 'g', 'GiB'),
@@ -106,16 +122,19 @@ local operatorObs = obs {
         } else {}
       ),
       securityContext: crSecurityContext,
+      securityContextContainer: crSecurityContextContainer,
     },
 
     query+:: {
       securityContext: crSecurityContext,
+      securityContextContainer: crSecurityContextContainer,
       // Flip the bool in CR as we want to use Thanos engine by default
       useThanosEngine: if std.objectHas(cr.spec.thanos.query, 'usePrometheusEngine') && cr.spec.thanos.query.usePrometheusEngine == true then false else true,
     } + if std.objectHas(cr.spec.thanos, 'query') then cr.spec.thanos.query else {},
 
     queryFrontend+:: {
       securityContext: crSecurityContext,
+      securityContextContainer: crSecurityContextContainer,
       local maxItemSize = if std.objectHas(cr.spec.thanos, 'queryFrontend') && std.objectHas(cr.spec.thanos.queryFrontend, 'cache') && std.objectHas(cr.spec.thanos.queryFrontend.cache, 'maxItemSize') then cr.spec.thanos.queryFrontend.cache.maxItemSize else obs.thanos.queryFrontend.config.maxItemSize,
       maxItemSize: std.strReplace(std.strReplace(maxItemSize, 'm', 'MiB'), 'g', 'GiB'),
     } + if std.objectHas(cr.spec.thanos, 'queryFrontend') then cr.spec.thanos.queryFrontend else {},
@@ -132,6 +151,7 @@ local operatorObs = obs {
         } else {}
       ),
       securityContext: crSecurityContext,
+      securityContextContainer: crSecurityContextContainer,
     },
   }),
 
