@@ -12,7 +12,6 @@ local tlsProfileConfig = (
 );
 
 local basePodSecurityContext = {
-  runAsGroup: 65532,
   runAsNonRoot: true,
   seccompProfile: { type: 'RuntimeDefault' },
 };
@@ -20,7 +19,6 @@ local basePodSecurityContext = {
 local crSecurityContext = basePodSecurityContext + (if std.objectHas(cr.spec, 'securityContext') then cr.spec.securityContext else {});
 
 local baseContainerSecurityContext = {
-  runAsGroup: 65532,
   runAsNonRoot: true,
   allowPrivilegeEscalation: false,
   readOnlyRootFilesystem: true,
