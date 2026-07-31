@@ -11,10 +11,7 @@ local tlsProfileConfig = (
   if std.objectHas(tlsProfile, 'minVersion') then { tlsMinVersion: tlsProfile.minVersion } else {}
 );
 
-local basePodSecurityContext = {
-  runAsNonRoot: true,
-  seccompProfile: { type: 'RuntimeDefault' },
-};
+local basePodSecurityContext = {};
 
 local crSecurityContext = basePodSecurityContext + (if std.objectHas(cr.spec, 'securityContext') then cr.spec.securityContext else {});
 
