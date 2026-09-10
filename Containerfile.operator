@@ -12,6 +12,10 @@ COPY ./jsonnet/vendor/stolo-configuration/components/ components/
 WORKDIR /workspace/operator/locutus
 RUN GO111MODULE="on" CGO_ENABLED=1 GOFLAGS="" go build
 
+# Remove test manifests containing TLS certificates/secrets from vendor directory
+RUN rm -rf /workspace/operator/jsonnet/vendor/github.com/observatorium/observatorium/configuration/tests \
+           /workspace/operator/jsonnet/vendor/github.com/stolostron/observatorium-deployment/configuration/tests
+
 FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
 
 WORKDIR /
