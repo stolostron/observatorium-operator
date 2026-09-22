@@ -12,7 +12,7 @@ COPY ./jsonnet/vendor/stolo-configuration/components/ components/
 WORKDIR /workspace/operator/locutus
 RUN GO111MODULE="on" CGO_ENABLED=1 GOFLAGS="" go build
 
-FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
+FROM registry.access.redhat.com/hi/core-runtime:latest-openssl-fips
 
 WORKDIR /
 COPY --from=builder /workspace/operator/locutus/locutus /locutus
