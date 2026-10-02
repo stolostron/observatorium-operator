@@ -3,33 +3,30 @@
 
 FROM registry.redhat.io/openshift/golang-builder:golang-builder-v1.26-rhel9 AS builder
 
-WORKDIR /workspace
-# Copy the jsonnet source
-COPY . operator/
-COPY ./jsonnet/vendor/stolo-configuration/components/ components/
+WORKDIR /workspace/locutus
 
-# Build
-WORKDIR /workspace/operator/locutus
+COPY locutus/ .
+
 RUN GO111MODULE="on" CGO_ENABLED=1 GOFLAGS="" go build
-
-# Remove test manifests containing TLS certificates/secrets from vendor directory
-RUN rm -rf /workspace/operator/jsonnet/vendor/github.com/observatorium/observatorium/configuration/tests \
-           /workspace/operator/jsonnet/vendor/github.com/stolostron/observatorium-deployment/configuration/tests
-
-# remove all go/go.mod file from jsonnet vendor dirs
-RUN find /workspace/operator/jsonnet/vendor -name "go.mod" -type f -delete
-RUN find /workspace/operator/jsonnet/vendor -name "*.go" -type f -delete
 
 FROM registry.redhat.io/ubi9/ubi-minimal-pqc:latest
 
 WORKDIR /
-COPY --from=builder /workspace/operator/locutus/locutus /locutus
-COPY --from=builder /workspace/operator/jsonnet /
-COPY --from=builder /workspace/components/ /components/
-COPY --from=builder /workspace/operator/jsonnet/vendor/ /vendor/
+
+COPY --from=builder /workspace/locutus/locutus /locutus
+
+COPY jsonnet/main.jsonnet /
+COPY jsonnet/obs-operator.jsonnet /
+COPY jsonnet/config.yaml /
+
+COPY jsonnet/vendor/github.com/stolostron/observatorium-deployment/configuration/components/ /vendor/stolo-configuration/components/
+COPY jsonnet/vendor/github.com/stolostron/kube-thanos/jsonnet/kube-thanos/ /vendor/kube-thanos/
+COPY jsonnet/vendor/github.com/stolostron/thanos-receive-controller/jsonnet/lib/ /vendor/thanos-receive-controller/
+COPY jsonnet/vendor/github.com/stolostron/observatorium/jsonnet/lib/ /vendor/lib/
+COPY jsonnet/vendor/github.com/observatorium/api/jsonnet/lib/ /vendor/observatorium-api/
+COPY jsonnet/vendor/github.com/observatorium/observatorium/configuration/components/loki.libsonnet /vendor/github.com/observatorium/observatorium/configuration/components/
 
 RUN chgrp -R 0 /vendor && chmod -R g=u /vendor
-RUN chgrp -R 0 /components && chmod -R g=u /components
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -62,8 +59,7 @@ LABEL name="rhacm2/observatorium-rhel9-operator" \
     org.label-schema.vendor="Red Hat, Inc." \
     org.label-schema.version=$IMAGE_VERSION
 
-RUN mkdir -p /licenses
-COPY --from=builder /workspace/operator/LICENSE /licenses/
+COPY LICENSE /licenses/
 
 USER 1001:1001
 
