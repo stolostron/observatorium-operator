@@ -16,6 +16,10 @@ RUN GO111MODULE="on" CGO_ENABLED=1 GOFLAGS="" go build
 RUN rm -rf /workspace/operator/jsonnet/vendor/github.com/observatorium/observatorium/configuration/tests \
            /workspace/operator/jsonnet/vendor/github.com/stolostron/observatorium-deployment/configuration/tests
 
+# remove all go/go.mod file from jsonnet vendor dirs
+RUN find /workspace/operator/jsonnet/vendor -name "go.mod" -type f -delete
+RUN find /workspace/operator/jsonnet/vendor -name "*.go" -type f -delete
+
 FROM registry.redhat.io/ubi9/ubi-minimal-pqc:latest
 
 WORKDIR /
