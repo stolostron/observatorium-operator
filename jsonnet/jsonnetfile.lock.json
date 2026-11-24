@@ -225,8 +225,8 @@
           "subdir": "jsonnet/kube-thanos"
         }
       },
-      "version": "458a335beed2670f23fd9869406a99f1bc61f2cc",
-      "sum": "SH/ELLGJXzPKDEmfotYwPF7Dmr/IZf1pVw+j/lfYyi4="
+      "version": "23a2bf164a51aaeda5f1b04733d64dd58164208a",
+      "sum": "mqAl3Iar1w0dVULioLtUOW0stsWWB7LMpAV3F4CwEl8="
     },
     {
       "source": {
@@ -235,8 +235,8 @@
           "subdir": "configuration"
         }
       },
-      "version": "5d0497f377f56fbfdd8372394b6c9e2d30a5b45e",
-      "sum": "oExcq0Wj+HRndcWsNStjBOQwqDaamZPm32cAZtkTCRQ=",
+      "version": "3cff9de0c3c2407538d93f97250a479eb0da5aec",
+      "sum": "LYYuPgEAoh5MNVzmwfgffspalU07KjRdn2J8f1+hKaA=",
       "name": "stolo-configuration"
     },
     {
@@ -246,8 +246,8 @@
           "subdir": "jsonnet/lib"
         }
       },
-      "version": "2a3a72d7c5da4fc5f1d4256f2fed15105831b1a0",
-      "sum": "EiCkSfQ68NLS6IY/AIjqhmV/B1fjj7DHbyiXGSyO3fk="
+      "version": "192ac25e10d76de573a3c61552535b7115aaed9d",
+      "sum": "YtKz1jYyeUgVWw+7jDPyTea4F6d78ZWHMuM87P2toNk="
     },
     {
       "source": {

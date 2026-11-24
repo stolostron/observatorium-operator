@@ -124,12 +124,20 @@ function(params) {
           '--grpc-server-tls-min-version=' + tr.config.tlsMinVersion,
         ] else []
       ) + (
+        if std.length(tr.config.tlsCurves) > 0 then [
+          '--grpc-server-tls-curves=' + tr.config.tlsCurves,
+        ] else []
+      ) + (
         if std.length(tr.config.tlsCipherSuites) > 0 then [
           '--remote-write.server-tls-ciphers=' + tr.config.tlsCipherSuites,
         ] else []
       ) + (
         if std.length(tr.config.tlsMinVersion) > 0 then [
           '--remote-write.server-tls-min-version=' + tr.config.tlsMinVersion,
+        ] else []
+      ) + (
+        if std.length(tr.config.tlsCurves) > 0 then [
+          '--remote-write.server-tls-curves=' + tr.config.tlsCurves,
         ] else []
       ),
       env: [

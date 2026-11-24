@@ -123,6 +123,10 @@ function(params) {
         if std.length(ts.config.tlsMinVersion) > 0 then [
           '--grpc-server-tls-min-version=' + ts.config.tlsMinVersion,
         ] else []
+      ) + (
+        if std.length(ts.config.tlsCurves) > 0 then [
+          '--grpc-server-tls-curves=' + ts.config.tlsCurves,
+        ] else []
       ),
       env: [
         {

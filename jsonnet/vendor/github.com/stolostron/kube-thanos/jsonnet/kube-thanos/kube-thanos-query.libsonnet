@@ -34,6 +34,7 @@ local defaults = {
   telemetrySeriesQuantiles: '',
   tlsCipherSuites: '',
   tlsMinVersion: '',
+  tlsCurves: '',
 
   commonLabels:: {
     'app.kubernetes.io/name': 'thanos-query',
@@ -200,6 +201,10 @@ function(params) {
         ) + (
           if std.length(tq.config.tlsMinVersion) > 0 then [
             '--grpc-server-tls-min-version=' + tq.config.tlsMinVersion,
+          ] else []
+        ) + (
+          if std.length(tq.config.tlsCurves) > 0 then [
+            '--grpc-server-tls-curves=' + tq.config.tlsCurves,
           ] else []
         ),
       env: [

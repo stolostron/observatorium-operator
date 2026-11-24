@@ -19,6 +19,7 @@ local defaults = {
   },
   tlsCipherSuites: '',
   tlsMinVersion: '',
+  tlsCurves: '',
   hashrings: [{
     hashring: 'default',
     tenants: [],
@@ -232,6 +233,7 @@ function(params) {
     objectStorageConfig: thanos.config.objectStorageConfig,
     tlsCipherSuites: thanos.config.tlsCipherSuites,
     tlsMinVersion: thanos.config.tlsMinVersion,
+    tlsCurves: thanos.config.tlsCurves,
     hashringConfigMapName: '%s-generated' % thanos.receiveController.configmap.metadata.name,
   }),
 
@@ -247,6 +249,7 @@ function(params) {
     objectStorageConfig: thanos.config.objectStorageConfig,
     tlsCipherSuites: thanos.config.tlsCipherSuites,
     tlsMinVersion: thanos.config.tlsMinVersion,
+    tlsCurves: thanos.config.tlsCurves,
     queriers: ['dnssrv+_http._tcp.%s.%s.svc.cluster.local' % [thanos.query.service.metadata.name, thanos.query.service.metadata.namespace]],
   }),
 
@@ -260,6 +263,7 @@ function(params) {
     objectStorageConfig: thanos.config.objectStorageConfig,
     tlsCipherSuites: thanos.config.tlsCipherSuites,
     tlsMinVersion: thanos.config.tlsMinVersion,
+    tlsCurves: thanos.config.tlsCurves,
     replicas: 1,
     logLevel: 'info',
     local memcachedDefaults = {
@@ -300,6 +304,7 @@ function(params) {
     version: thanos.config.version,
     tlsCipherSuites: thanos.config.tlsCipherSuites,
     tlsMinVersion: thanos.config.tlsMinVersion,
+    tlsCurves: thanos.config.tlsCurves,
     stores: [
       'dnssrv+_grpc._tcp.%s.%s.svc.cluster.local' % [service.metadata.name, service.metadata.namespace]
       for service in

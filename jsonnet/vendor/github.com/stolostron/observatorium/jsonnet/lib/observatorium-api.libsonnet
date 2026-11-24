@@ -174,6 +174,12 @@ function(params) {
                         '--tls.min-version=' + api.config.tls.minVersion,
                       ]
                     else []
+                  ) + (
+                    if std.objectHas(api.config.tls, 'curvePreferences') then
+                      [
+                        '--tls.curve-preferences=' + api.config.tls.curvePreferences,
+                      ]
+                    else []
                   )
                 else []
               ) + (

@@ -57,12 +57,14 @@ type ObservatoriumSpec struct {
 	PullSecret string `json:"pullSecret,omitempty"`
 }
 
-// TLSProfileSpec configures TLS cipher suites and minimum version for component servers.
+// TLSProfileSpec configures TLS cipher suites, minimum version and curve preferences for component servers.
 type TLSProfileSpec struct {
 	// +optional
 	CipherSuites string `json:"cipherSuites,omitempty"`
 	// +optional
 	MinVersion string `json:"minVersion,omitempty"`
+	// +optional
+	CurvePreferences string `json:"curvePreferences,omitempty"`
 }
 
 type ThanosSpec struct {
@@ -72,7 +74,7 @@ type ThanosSpec struct {
 	ImagePullPolicy v1.PullPolicy `json:"imagePullPolicy,omitempty"`
 	// Version of Thanos image to be deployed.
 	Version string `json:"version,omitempty"`
-	// TLSProfile configures TLS cipher suites and minimum version for all Thanos component servers.
+	// TLSProfile configures TLS cipher suites, minimum version and curve preferences for all Thanos component servers.
 	// +optional
 	TLSProfile TLSProfileSpec `json:"tlsProfile,omitempty"`
 	// Thanos CompactSpec

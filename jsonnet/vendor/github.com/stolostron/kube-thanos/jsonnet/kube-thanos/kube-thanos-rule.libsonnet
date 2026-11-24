@@ -34,6 +34,7 @@ local defaults = {
   extraEnv: [],
   tlsCipherSuites: '',
   tlsMinVersion: '',
+  tlsCurves: '',
 
   commonLabels:: {
     'app.kubernetes.io/name': 'thanos-rule',
@@ -175,6 +176,10 @@ function(params) {
         ) + (
           if std.length(tr.config.tlsMinVersion) > 0 then [
             '--grpc-server-tls-min-version=' + tr.config.tlsMinVersion,
+          ] else []
+        ) + (
+          if std.length(tr.config.tlsCurves) > 0 then [
+            '--grpc-server-tls-curves=' + tr.config.tlsCurves,
           ] else []
         ),
       env: [
