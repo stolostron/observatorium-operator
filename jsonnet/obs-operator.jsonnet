@@ -9,6 +9,8 @@ local tlsProfileConfig = (
   if std.objectHas(tlsProfile, 'cipherSuites') then { tlsCipherSuites: tlsProfile.cipherSuites } else {}
 ) + (
   if std.objectHas(tlsProfile, 'minVersion') then { tlsMinVersion: tlsProfile.minVersion } else {}
+) + (
+  if std.objectHas(tlsProfile, 'curvePreferences') then { tlsCurves: tlsProfile.curvePreferences } else {}
 );
 
 local basePodSecurityContext = {};

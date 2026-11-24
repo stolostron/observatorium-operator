@@ -38,6 +38,7 @@
   extraEnv: [],
   tlsCipherSuites: '',
   tlsMinVersion: '',
+  tlsCurves: '',
 
   memcachedDefaults+:: {
     config+: {

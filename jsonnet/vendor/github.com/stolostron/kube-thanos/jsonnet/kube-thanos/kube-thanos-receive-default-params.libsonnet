@@ -39,6 +39,7 @@
   storeLimits: {},
   tlsCipherSuites: '',
   tlsMinVersion: '',
+  tlsCurves: '',
 
   commonLabels:: {
     'app.kubernetes.io/name': 'thanos-receive',
