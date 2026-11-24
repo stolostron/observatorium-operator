@@ -10,7 +10,7 @@ COPY ./jsonnet/vendor/stolo-configuration/components/ components/
 
 # Build
 WORKDIR /workspace/operator/locutus
-RUN GO111MODULE="on" CGO_ENABLED=1 GOFLAGS="" go build
+RUN GO111MODULE="on" CGO_ENABLED=1 GOEXPERIMENT=strictfipsruntime GOFLAGS="" go build
 
 # Remove test manifests containing TLS certificates/secrets from vendor directory
 RUN rm -rf /workspace/operator/jsonnet/vendor/github.com/observatorium/observatorium/configuration/tests \
